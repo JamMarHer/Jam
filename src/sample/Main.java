@@ -142,6 +142,7 @@ public class Main extends Application {
             //System.out.print("hello");
         }
 
+
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
