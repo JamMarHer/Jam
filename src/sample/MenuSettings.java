@@ -16,18 +16,17 @@ import javafx.stage.Stage;
  */
 public class MenuSettings {
 
-    public static void display(){
+    public boolean clicked = false;
+
+    public  void display(){
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Settings");
-        window.setMinWidth(300);
+        window.setMinWidth(600);
+        window.setMinHeight(450);
         Button toClose = new Button("Close");
-        toClose.setOnAction(new EventHandler<ActionEvent>(){
-            @Override public void handle(ActionEvent e){
-                window.close();
-            }
-        });
+        toClose.setOnAction(e -> window.close());
 
 
         BorderPane layout = new BorderPane();
@@ -39,7 +38,7 @@ public class MenuSettings {
 
     }
 
-    public static VBox addVBox (){
+    public  VBox addVBox (){
         VBox toReturn = new VBox();
         Hyperlink options[] = new Hyperlink[] {
                 new Hyperlink("Sales"),
@@ -51,6 +50,12 @@ public class MenuSettings {
             VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
             toReturn.getChildren().add(options[i]);
         }
+        Button trial = new Button("Cli");
+        toReturn.getChildren().addAll(trial);
+
+        trial.setOnAction(e -> {
+            System.out.print("Clicked");
+        });
         return toReturn;
     }
 }

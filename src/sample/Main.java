@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private DatabaseOperations databaseOperations;
+
     public static void main(String[] args) {
         launch(args);
 
@@ -23,11 +25,19 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //startSystem();
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        databaseOperations = new DatabaseOperations();
+        if(!databaseOperations.checkDBPresent()){
+            System.out.println("DB not present");
+            databaseOperations.generateDatabase();
+        }
+        databaseOperations.insertData("extDir","trial");
+
+
+
+
 
         primaryStage.setTitle("Mushroom");
-        Button startSystem = new Button("Start");
+        Button startSystem = new Button("/home/jam/daikon-ext/catkin_ws/src/recorder/");
         startSystem.setOnAction(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent e){
                 //startSystem();
@@ -117,14 +127,20 @@ public class Main extends Application {
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
 
+        MenuSettings menuSettings = new MenuSettings();
+
         MenuItem settings = new MenuItem("Settings");
         settings.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.print("Settings clicked");
-                MenuSettings.display();
+                menuSettings.display();
             }
         });
+
+        if(menuSettings.clicked){
+            //System.out.print("hello");
+        }
 
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(new EventHandler<ActionEvent>() {
@@ -137,7 +153,7 @@ public class Main extends Application {
         return menuBar;
     }
 
-    private static void startSystem(){
+    private  void startSystem(){
         System.out.println("Initializing roscore...");
         roscoreInit();
         System.out.println("Initializing ServiceHandler...");
@@ -161,8 +177,8 @@ public class Main extends Application {
         }
     }
 
-    private static void serviceHandler(){
-        String[] command = {"/bin/bash","-c","python2.7 /home/jam/daikon-ext/catkin_ws/src/recorder/scripts/service_handler.py"};
+    private  void serviceHandler(){
+        String[] command = {"/bin/bash","-c","python2.7" + databaseOperations.retrieveData("extDir") + "scripts/service_handler.py"};
         ThreadHandler TH3 = new ThreadHandler(command, false);
         TH3.start();
         System.out.print(TH3.returnedData);
