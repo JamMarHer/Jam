@@ -3,8 +3,10 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -25,6 +27,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+
+        Scene scene = new Scene(root, 700, 700);
+
         databaseOperations = new DatabaseOperations();
         if(!databaseOperations.checkDBPresent()){
             System.out.println("DB not present");
@@ -54,7 +61,7 @@ public class Main extends Application {
       //  initialLayout.setRight(addFlowPane());
 
      //   initialLayout.getChildren().add(startSystem);
-        Scene scene = new Scene(initialLayout, 900, 450);
+        //Scene scene = new Scene(initialLayout, 900, 450);
         initialLayout.prefWidthProperty().bind(scene.widthProperty());
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -127,20 +134,10 @@ public class Main extends Application {
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
 
-        MenuSettings menuSettings = new MenuSettings();
 
-        MenuItem settings = new MenuItem("Settings");
-        settings.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.print("Settings clicked");
-                menuSettings.display();
-            }
-        });
 
-        if(menuSettings.clicked){
-            //System.out.print("hello");
-        }
+
+
 
 
         MenuItem exit = new MenuItem("Exit");
@@ -150,7 +147,6 @@ public class Main extends Application {
             }
         });
         menuBar.getMenus().addAll(menuFile,menuEdit,menuView);
-        menuFile.getItems().addAll(settings, exit);
         return menuBar;
     }
 
