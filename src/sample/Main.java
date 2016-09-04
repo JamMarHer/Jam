@@ -3,15 +3,12 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -22,7 +19,6 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private DatabaseOperations databaseOperations;
-    private RosCoreInit rosCoreInit;
 
     public static void main(String[] args) {
         launch(args);
@@ -34,8 +30,7 @@ public class Main extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
-        Scene scene = new Scene(root);
-
+        Scene scene = new Scene(root, 700, 700);
 
         databaseOperations = new DatabaseOperations();
         if(!databaseOperations.checkDBPresent()){
@@ -59,26 +54,14 @@ public class Main extends Application {
 
         BorderPane initialLayout = new BorderPane();
 
-        Image jam = new Image(getClass().getResourceAsStream("images/post_icon_jam.png"));
-        Button InitializeSystem = new Button("", new ImageView(jam));
-        InitializeSystem.setOnAction(e ->{
-            try{
-                rosCoreInit = new RosCoreInit();
-                Thread thread = new Thread(rosCoreInit);
-                thread.start();
-            }catch (Exception ee){
-                ee.printStackTrace();
-            }
-        });
-
         MenuBar menuBar = generateMenuBar();
         initialLayout.setTop(menuBar);
         //initialLayout.setLeft(addVBox());
-        initialLayout.setCenter(InitializeSystem);
+       // initialLayout.setCenter(addGridPane());
       //  initialLayout.setRight(addFlowPane());
 
      //   initialLayout.getChildren().add(startSystem);
-        Scene scene_ = new Scene(initialLayout, 900, 450);
+        //Scene scene = new Scene(initialLayout, 900, 450);
         initialLayout.prefWidthProperty().bind(scene.widthProperty());
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -151,20 +134,10 @@ public class Main extends Application {
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
 
-        MenuSettings menuSettings = new MenuSettings();
 
-        MenuItem settings = new MenuItem("Settings");
-        settings.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.print("Settings clicked");
-                menuSettings.display();
-            }
-        });
 
-        if(menuSettings.clicked){
-            //System.out.print("hello");
-        }
+
+
 
 
         MenuItem exit = new MenuItem("Exit");
@@ -174,38 +147,17 @@ public class Main extends Application {
             }
         });
         menuBar.getMenus().addAll(menuFile,menuEdit,menuView);
-        menuFile.getItems().addAll(settings, exit);
         return menuBar;
     }
 
-    private  void startNodes(){
-        if(rosCoreInit.state){
-            System.out.println("Initializing ServiceHandler...");
-            serviceHandler();
-        }else {
-            System.out.print("System not running");
-        }
-
-    }
-
-    private  void serviceHandler(){
-        String[] command = {"/bin/bash","-c","python2.7" + databaseOperations.retrieveData("extDir") + "scripts/service_handler.py"};
-        ThreadHandler TH3 = new ThreadHandler(command, false);
-        TH3.start();
-        System.out.print(TH3.returnedData);
-        System.out.print("done. \nServiceHandler running...");
-
-    }
-
-}
-
-class RosCoreInit implements Runnable{
-
-    boolean state;
-
-    @Override
-    public void run() {
+    private  void startSystem(){
         System.out.println("Initializing roscore...");
+        roscoreInit();
+        System.out.println("Initializing ServiceHandler...");
+        serviceHandler();
+    }
+
+    private static void roscoreInit(){
         String[] command = {"/bin/bash","-c","roscore"};
         String[] command2 = {"/bin/bash","-c","rosservice list"};
         ThreadHandler TH = new ThreadHandler(command, false);
@@ -217,14 +169,20 @@ class RosCoreInit implements Runnable{
         try{ Thread.sleep(3000); }catch(Exception e){ e.printStackTrace(); }
         if (TH2.returnedData != null){
             System.out.println("done.");
-            state = true;
         } else {
             System.out.println("failed.");
-            state = false;
         }
     }
 
-    public boolean running(){
-        return state;
+    private  void serviceHandler(){
+        String[] command = {"/bin/bash","-c","python2.7" + databaseOperations.retrieveData("extDir") + "scripts/service_handler.py"};
+        ThreadHandler TH3 = new ThreadHandler(command, false);
+        TH3.start();
+        System.out.print(TH3.returnedData);
+        System.out.print("done. \nServiceHandler running...");
+
     }
+
+
+
 }
