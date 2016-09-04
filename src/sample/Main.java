@@ -52,17 +52,13 @@ public class Main extends Application {
             }
         });
 
-        BorderPane initialLayout = new BorderPane();
 
-        MenuBar menuBar = generateMenuBar();
-        initialLayout.setTop(menuBar);
         //initialLayout.setLeft(addVBox());
        // initialLayout.setCenter(addGridPane());
       //  initialLayout.setRight(addFlowPane());
 
      //   initialLayout.getChildren().add(startSystem);
         //Scene scene = new Scene(initialLayout, 900, 450);
-        initialLayout.prefWidthProperty().bind(scene.widthProperty());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -128,27 +124,7 @@ public class Main extends Application {
 
         return vbox;
     }
-    public MenuBar generateMenuBar() {
-        MenuBar menuBar = new MenuBar();
-        Menu menuFile = new Menu("File");
-        Menu menuEdit = new Menu("Edit");
-        Menu menuView = new Menu("View");
 
-
-
-
-
-
-
-        MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                System.exit(0);
-            }
-        });
-        menuBar.getMenus().addAll(menuFile,menuEdit,menuView);
-        return menuBar;
-    }
 
     private  void startSystem(){
         System.out.println("Initializing roscore...");

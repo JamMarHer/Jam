@@ -2,7 +2,9 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -10,6 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Controllers.SettingsMenuController;
+
+import java.io.IOException;
 
 /**
  * Created by jam on 9/1/16.
@@ -18,7 +23,9 @@ public class MenuSettings {
 
     public boolean clicked = false;
 
-    public  void display(){
+    public  void display() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("settings.fxml"));
+
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
@@ -31,8 +38,9 @@ public class MenuSettings {
 
         BorderPane layout = new BorderPane();
         layout.setLeft(addVBox());
-        Scene scene = new Scene(layout);
+        Scene scene = new Scene(root);
         window.setScene(scene);
+        window.setResizable(false);
         window.show();
         // layout.setCenter(addGrid());
 
