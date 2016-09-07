@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -32,7 +33,11 @@ public class SettingsMenuController implements Initializable {
     @FXML private Button MenuSettingDaikonApply;
     @FXML private Button MenuSettingDaikonLocateDirectory;
     @FXML private TextField MenuSettingDaikonPath;
+    //--------------------------------
+    @FXML private VBox ImplementationSettings;
+    @FXML private VBox DaikonSettings;
 
+    private int tempScene = 0;
 
     DatabaseOperations databaseOperations;
     private String extPath;
@@ -51,12 +56,18 @@ public class SettingsMenuController implements Initializable {
         MenuSettingImplementation.setOnAction(event -> {
             MenuSettingImplementation.setStyle("-fx-background-color: " + selectedColor +";");
             resetColorsBut("MenuSettingImplementation");
+            if (tempScene  == 1){ DaikonSettings.setVisible(false); tempScene = 0;}
+            ImplementationSettings.setVisible(true);
+
         });
 
         MenuSettingDaikon.setOnAction(event -> {
             MenuSettingDaikon.setStyle("-fx-background-color: " + selectedColor +";");
             resetColorsBut("MenuSettingDaikon");
             System.out.print("lol");
+            if(tempScene == 0){ ImplementationSettings.setVisible(false); tempScene = 1; }
+            DaikonSettings.setVisible(true);
+
         });
 
 
@@ -68,6 +79,9 @@ public class SettingsMenuController implements Initializable {
     private void MenuSettingImplementationLocateDirectory (ActionEvent event){
         System.out.print(event.getEventType().getName());
         Stage stage = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
+        String nameOfButton = ((Button)event.getSource()).getId();
+        // Continue here so that the name of Button can be compared to deciced which pathh to use
+        System.out.print(nameOfButton);
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("ROS Implementation Directory");
         File selectedDirectory = directoryChooser.showDialog(stage);

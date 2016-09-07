@@ -37,7 +37,6 @@ public class MenuSettings {
 
 
         BorderPane layout = new BorderPane();
-        layout.setLeft(addVBox());
         Scene scene = new Scene(root);
         window.setScene(scene);
         window.setResizable(false);
@@ -46,25 +45,6 @@ public class MenuSettings {
 
     }
 
-    public  VBox addVBox (){
-        VBox toReturn = new VBox();
-        Hyperlink options[] = new Hyperlink[] {
-                new Hyperlink("Sales"),
-                new Hyperlink("Marketing"),
-                new Hyperlink("Distribution"),
-                new Hyperlink("Costs")};
 
-        for (int i=0; i<4; i++) {
-            VBox.setMargin(options[i], new Insets(0, 0, 0, 8));
-            toReturn.getChildren().add(options[i]);
-        }
-        Button trial = new Button("Cli");
-        toReturn.getChildren().addAll(trial);
-
-        trial.setOnAction(e -> {
-            System.out.print("Clicked");
-        });
-        return toReturn;
-    }
 }
 
