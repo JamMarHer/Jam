@@ -34,13 +34,16 @@ public class DatabaseOperations {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            String sql = "CREATE TABLE Settings " +
-                    "(EXT_DIR         TEXT    NOT NULL " +
+            String sql = "CREATE TABLE settings " +
+                    "(ID INT PRIMARY KEY    NOT NULL,"+
+                    "EXT_DIR         TEXT, " +
+                    "DAIKON_DIR         TEXT"+
                     ")";
             stmt.executeUpdate(sql);
             stmt.close();
             c.close();
         }catch (Exception e){
+            System.out.print("generate");
             System.out.println( e.getClass().getName() + ": generateDatabase " + e.getMessage());
             System.exit(0);
         }
@@ -62,20 +65,59 @@ public class DatabaseOperations {
 
             stmt = c.createStatement();
             if(option.equals("extDir")){
-                String sql = "INSERT INTO Settings (EXT_DIR) VALUES ('"+data+"' );";
+                String sql = "INSERT INTO settings (ID, EXT_DIR) VALUES (1, '"+data+"' );";
                 stmt.executeUpdate(sql);
                 created = true;
+            }
+            if(option.equals("daikonDir")){
+                String sql = "INSERT INTO settings (ID, DAIKON_DIR) VALUES (2, '"+data+"' );";
+                stmt.executeUpdate(sql);
+                created =true;
             }
 
             stmt.close();
             c.commit();
             c.close();
         } catch ( Exception e ) {
+            System.out.print("insert");
             System.err.println( e.getClass().getName() + ": insertData " + e.getMessage() );
             System.exit(0);
         }
         return created;
     }
+
+    public boolean updateData(String option, String data){
+        boolean updated = false;
+        Connection c = null;
+        Statement statement = null;
+
+        try{
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:settings.db");
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            statement = c.createStatement();
+            if (option.equals("extDir")) {
+                String sql = "UPDATE settings set EXT_DIR = '" + data +"' WHERE ID=1;";
+                System.out.print(data + "From DB");
+                statement.executeUpdate(sql);
+                c.commit();
+                updated = true;
+            }
+            statement.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.print("update");
+
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+
+        return updated;
+
+    }
+
+
 
     public String retrieveData(String option){
 
@@ -89,7 +131,7 @@ public class DatabaseOperations {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM Settings;" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM settings WHERE ID=1;" );
             //while ( rs.next() ) {
             //    String extDir = rs.getString("EXT_DIR");
             //}
@@ -100,10 +142,11 @@ public class DatabaseOperations {
             stmt.close();
             c.close();
         } catch ( Exception e ) {
+
             System.err.println( e.getClass().getName() + ": retrieveData " + e.getMessage() );
             System.exit(0);
         }
-        System.out.println("Operation done successfully");
+        System.out.println("Operation done successfully returning " + toReturn);
         return toReturn;
     }
 
