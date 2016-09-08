@@ -15,6 +15,7 @@ import sample.DatabaseOperations;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 
@@ -37,13 +38,13 @@ public class SettingsMenuController implements Initializable {
     @FXML private VBox ImplementationSettings;
     @FXML private VBox DaikonSettings;
 
-    private int tempScene = 0;
+    private int tempScene = 0; // 0 = implementation, 1 = daikon
 
     DatabaseOperations databaseOperations;
     private String extPath;
     private String daikonPath;
     private static final String selectedColor = "#828E8E";
-    private static final String normalColor = " #A3A3A3";
+    private static final String normalColor = " #747474";
 
 
     @Override
@@ -52,6 +53,7 @@ public class SettingsMenuController implements Initializable {
         databaseOperations = new DatabaseOperations();
         extPath = databaseOperations.retrieveData("extDir");
         MenuSettingImplementationPath.setText(extPath);
+        MenuSettingDaikonPath.setText(extPath);
 
         MenuSettingImplementation.setOnAction(event -> {
             MenuSettingImplementation.setStyle("-fx-background-color: " + selectedColor +";");
@@ -80,25 +82,32 @@ public class SettingsMenuController implements Initializable {
         System.out.print(event.getEventType().getName());
         Stage stage = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
         String nameOfButton = ((Button)event.getSource()).getId();
+        String directoryPath = "";
         // Continue here so that the name of Button can be compared to deciced which pathh to use
-        System.out.print(nameOfButton);
+        chooseFile(stage);
+        System.out.println(nameOfButton);
+
+    }
+
+    private void chooseFile(Stage stage){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("ROS Implementation Directory");
+        if(tempScene == 0){
+            directoryChooser.setTitle("ROS Implementation Directory");
+        }
+        if(tempScene == 1){
+            directoryChooser.setTitle("Daikon Directory");
+        }
         File selectedDirectory = directoryChooser.showDialog(stage);
-        String directoryPath = selectedDirectory.getAbsolutePath();
-        extPath = directoryPath;
-
-
-        MenuSettingImplementationPath.setText(directoryPath);
-
+        extPath = selectedDirectory.getAbsolutePath();
+        if(tempScene == 0){ MenuSettingImplementationPath.setText(extPath);}
+        if(tempScene == 1){ MenuSettingDaikonPath.setText(extPath);}
     }
 
     @FXML
     private void MenuSettingImplementationApply (ActionEvent event){
-        extPath = MenuSettingImplementationPath.getText();
-        System.out.print("updating rxtPath to" + extPath);
-        databaseOperations.updateData("extDir", extPath);
-
+        if(tempScene == 0){ databaseOperations.updateData("extDir", extPath);}
+        if(tempScene == 1){databaseOperations.updateData("extDaikon", extPath);}
+        System.out.println("updating " + tempScene +" " + extPath);
     }
 
     private void resetColorsBut(String notTo){

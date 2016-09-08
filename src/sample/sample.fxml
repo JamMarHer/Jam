@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<BorderPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem id="settings_menu" fx:id="settings" mnemonicParsing="false"  text="Settings" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem id="settings_menu" fx:id="settings" mnemonicParsing="false" text="Settings" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -27,4 +38,41 @@
                 </Menu>
             </menus>
         </MenuBar>
-    </top></BorderPane>
+    </top>
+    <left>
+        <TreeTableView minHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <columns>
+                <TreeTableColumn prefWidth="200" resizable="false" text="Nodes" />
+            </columns>
+        </TreeTableView>
+    </left>
+    <bottom>
+        <TitledPane animated="true" maxHeight="50.0" minHeight="50.0" text="ROS Commands" BorderPane.alignment="CENTER">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="1200.0" prefHeight="180.0">
+                    <children>
+                        <HBox maxWidth="1200.0" minWidth="1200.0" prefHeight="24.0">
+                            <children>
+                                <TextField fx:id="RosConsole" maxWidth="1150" minWidth="1150" />
+                                <Button fx:id="RosConsoleRun" maxWidth="50" minWidth="50" mnemonicParsing="false" text="Run" />
+                            </children></HBox>
+                    </children>
+                </AnchorPane>
+            </content>
+        </TitledPane>
+    </bottom>
+   <center>
+      <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #c6c6c6;" BorderPane.alignment="CENTER_RIGHT">
+         <children>
+            <Text fill="#6b6969" strokeType="OUTSIDE" strokeWidth="0.0" text="Environment has not been setup.">
+               <StackPane.margin>
+                  <Insets bottom="50.0" />
+               </StackPane.margin></Text>
+            <Line endX="100.0" startX="-150.0" stroke="#9e7171" strokeMiterLimit="5010.0" strokeWidth="2.0">
+               <StackPane.margin>
+                  <Insets bottom="20.0" />
+               </StackPane.margin>
+            </Line>
+         </children>
+      </StackPane>
+   </center></BorderPane>
