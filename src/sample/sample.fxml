@@ -23,7 +23,7 @@
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem id="settings_menu" fx:id="settings" mnemonicParsing="false" text="Settings" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem fx:id="close" mnemonicParsing="false" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
