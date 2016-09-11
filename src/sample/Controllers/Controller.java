@@ -2,8 +2,7 @@ package sample.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Hyperlink;
-import sample.MenuSettings;
+import sample.Logic.MenuSettings;
 
 import java.io.IOException;
 import java.net.URL;

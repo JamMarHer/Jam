@@ -1,4 +1,4 @@
-package sample; /**
+package sample.Logic; /**
  * Created by jam on 8/24/16.
  */
 

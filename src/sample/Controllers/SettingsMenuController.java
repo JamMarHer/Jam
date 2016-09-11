@@ -5,17 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import sample.DatabaseOperations;
+import sample.Logic.DatabaseOperations;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 
 

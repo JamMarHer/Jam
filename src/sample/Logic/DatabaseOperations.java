@@ -1,4 +1,4 @@
-package sample;
+package sample.Logic;
 
 import java.io.File;
 import java.sql.Connection;
