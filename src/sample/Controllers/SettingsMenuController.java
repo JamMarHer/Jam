@@ -37,7 +37,8 @@ public class SettingsMenuController implements Initializable {
     private int tempScene = 0; // 0 = implementation, 1 = daikon
 
     DatabaseOperations databaseOperations;
-    private String extPath;
+
+    private String extPath ;
     private String daikonPath;
     private static final String selectedColor = "#828E8E";
     private static final String normalColor = " #747474";
