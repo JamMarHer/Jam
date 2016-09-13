@@ -63,7 +63,6 @@ public class SettingsMenuController implements Initializable {
         MenuSettingDaikon.setOnAction(event -> {
             MenuSettingDaikon.setStyle("-fx-background-color: " + selectedColor +";");
             resetColorsBut("MenuSettingDaikon");
-            System.out.print("lol");
             if(tempScene == 0){ ImplementationSettings.setVisible(false); tempScene = 1; }
             DaikonSettings.setVisible(true);
 
@@ -95,7 +94,12 @@ public class SettingsMenuController implements Initializable {
             directoryChooser.setTitle("Daikon Directory");
         }
         File selectedDirectory = directoryChooser.showDialog(stage);
-        extPath = selectedDirectory.getAbsolutePath();
+        try {
+            extPath = selectedDirectory.getAbsolutePath();
+        }catch (Exception e){
+            System.out.print("Path selection canceled");
+            e.printStackTrace();
+        }
         if(tempScene == 0){ MenuSettingImplementationPath.setText(extPath);}
         if(tempScene == 1){ MenuSettingDaikonPath.setText(extPath);}
     }

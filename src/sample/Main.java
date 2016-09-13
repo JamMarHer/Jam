@@ -1,10 +1,14 @@
-package sample.Logic;
+package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.Logic.DatabaseOperations;
+import sample.Logic.InitialSetup;
+import sample.Logic.ThreadHandler;
 
 
 public class Main extends Application {
@@ -13,26 +17,23 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/sample.fxml"));
-
-        Scene scene = new Scene(root, 1200, 700);
-
         databaseOperations = new DatabaseOperations();
         if(!databaseOperations.checkDBPresent()){
             setupDB();
+            InitialSetup initialSetup = new InitialSetup();
+            initialSetup.display();
+        }else {
+            Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/sample.fxml"));
+            Scene scene = new Scene(root, 1200, 700);
+            primaryStage.setTitle("Mushroom");
+            primaryStage.setScene(scene);
+            primaryStage.show();
         }
-
-
-        primaryStage.setTitle("Mushroom");
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
     private  void setupDB(){

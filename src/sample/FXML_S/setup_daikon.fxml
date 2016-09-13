@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="setup_daikon" maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.InitialSetupController">
+    <children>
+        <Text fill="#3c3c3c" strokeType="OUTSIDE" strokeWidth="0.0" text="Daikon">
+            <font>
+                <Font size="21.0" />
+            </font>
+            <VBox.margin>
+                <Insets left="10.0" top="10.0" />
+            </VBox.margin>
+        </Text>
+        <Line endX="100.0" startX="-140.0" stroke="#9e7171" strokeWidth="2.0" />
+        <Label text="Provide path to Daikon directory. Daikon allow us to analyze the data that our ROS implementation provides. You must have installed Daikon (steps here http://plse.cs.washington.edu/daikon/) the extension process (installing our templates) would be done automatically by Mushroom." wrapText="true">
+            <font>
+                <Font size="12.0" />
+            </font>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" top="10.0" />
+            </VBox.margin>
+        </Label>
+
+
+        <HBox prefHeight="12.0" prefWidth="200.0">
+            <children>
+                <Button fx:id="setup_daikon_button_back" mnemonicParsing="false" style="-fx-background-color: #9e7171;" text="Back" textFill="#282828">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="setup_daikon_button_locatedirectory" mnemonicParsing="false" style="-fx-background-color: #c6c6c6;" text="Locate Path">
+                    <opaqueInsets>
+                        <Insets left="10.0" />
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                    <effect>
+                        <Blend />
+                    </effect>
+                </Button>
+                <TextField fx:id="setup_daikon_edittext_path" maxHeight="23.0" prefHeight="23.0" prefWidth="546.0" style="-fx-background-color: #A3A3A3;" text="  /...">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" top="2.0" />
+                    </HBox.margin>
+                    <font>
+                        <Font size="12.0" />
+                    </font></TextField>
+                <Button fx:id="setup_daikon_button_next" mnemonicParsing="false" style="-fx-background-color: #9e7171;" text="Next" textFill="#282828">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+            <VBox.margin>
+                <Insets top="313.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>

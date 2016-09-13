@@ -1,6 +1,5 @@
 package sample.Logic;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,35 +11,30 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by jam on 9/1/16.
+ * Created by jam on 9/13/16.
  */
-public class MenuSettings {
+
+
+public class InitialSetup {
+
+
 
     public boolean clicked = false;
 
-
-
     public  void display() throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/settings.fxml"));
+
+        Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/setup.fxml"));
 
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Settings");
-        window.setMinWidth(600);
-        window.setMinHeight(450);
-        Button toClose = new Button("Close");
-        toClose.setOnAction(e -> window.close());
+        window.setTitle("Initial Setup - Mushroom");
 
-
-        BorderPane layout = new BorderPane();
         Scene scene = new Scene(root);
         window.setScene(scene);
         window.setResizable(false);
@@ -49,4 +43,3 @@ public class MenuSettings {
 
     }
 }
-

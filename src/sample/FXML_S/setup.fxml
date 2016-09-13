@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.InitialSetupController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="266.6666666667">
+         <children>
+            <Text fill="#3c3c3c" strokeType="OUTSIDE" strokeWidth="0.0" text="Robot Operating System::: ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="182.0" />
+               </VBox.margin>
+            </Text>
+             <Line endX="100.0" startX="-60.0" stroke="#9e7171">
+                 <StackPane.margin>
+                     <Insets top="120.0" />
+                 </StackPane.margin>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+             </Line>
+            <Label text="Is a framework that facilitates the development of robotic applications. From a high-level perspective, it enables developers to separate complex actions into pieces of functionality, encapsulated in nodes. Nodes communicate using topics and services." wrapText="true">
+               <font>
+                  <Font size="12.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </VBox.margin>
+            </Label>
+         </children></VBox>
+      <VBox prefHeight="200.0" prefWidth="266.6666666667">
+         <children>
+            <StackPane prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="it" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../Desktop/post_icon.png" />
+                     </image>
+                     <StackPane.margin>
+                        <Insets bottom="30.0" />
+                     </StackPane.margin>
+                  </ImageView>
+                  <Text fill="#3c3c3c" strokeType="OUTSIDE" strokeWidth="0.0" text="Mushroom">
+                     <StackPane.margin>
+                        <Insets top="100.0" />
+                     </StackPane.margin>
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Text>
+                  <Line endX="100.0" startX="-60.0" stroke="#9e7171">
+                     <StackPane.margin>
+                        <Insets top="120.0" />
+                     </StackPane.margin>
+                  </Line>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </StackPane>
+
+            <Label text="Welcome, to start initial setup click the button bellow." textAlignment="CENTER" textFill="#2c2c2c" wrapText="true" />
+
+             <Text fill="#3c3c3c" strokeType="OUTSIDE" strokeWidth="0.0" text="Project::: ">
+                 <font>
+                     <Font size="16.0" />
+                 </font>
+                 <VBox.margin>
+                     <Insets left="10.0" top="10.0" />
+                 </VBox.margin>
+             </Text>
+             <Line endX="100.0" startX="-60.0" stroke="#9e7171">
+                 <StackPane.margin>
+                     <Insets top="120.0" />
+                 </StackPane.margin>
+                 <VBox.margin>
+                     <Insets left="10.0" />
+                 </VBox.margin>
+             </Line>
+             <Label text="Understanding the architectural properties that holdon a ROS (Robot Operating System) system can be difficult asresult of the constraints that the framework itself can carry andthe extent of complexity in which the program can evolve to.Understanding such complexity in terms of invariants providesto developers a new approach for debugging and validating ROS systems." wrapText="true">
+                 <font>
+                     <Font size="12.0" />
+                 </font>
+                 <VBox.margin>
+                     <Insets left="10.0" right="10.0" />
+                 </VBox.margin>
+             </Label>
+         </children></VBox>
+      <VBox prefHeight="200.0" prefWidth="266.6666666667">
+         <children>
+             <Text fill="#3c3c3c" strokeType="OUTSIDE" strokeWidth="0.0" text="Daikon::: ">
+                 <font>
+                     <Font size="16.0" />
+                 </font>
+                 <VBox.margin>
+                     <Insets left="10.0" top="180.0" />
+                 </VBox.margin>
+             </Text>
+             <Line endX="100.0" startX="-60.0" stroke="#9e7171">
+                 <StackPane.margin>
+                     <Insets top="120.0" />
+                 </StackPane.margin>
+                 <VBox.margin>
+                     <Insets left="10.0" />
+                 </VBox.margin>
+             </Line>
+             <Label text="Is a tool that helps us infer invariants byreporting only properties that hold throughout specific programpoints. Daikon can be extended to find new invariants byintroducing templates.Is a tool that helps us infer invariants byreporting only properties that hold throughout specific programpoints. Daikon can be extended to find new invariants byintroducing templates." wrapText="true">
+             <font>
+                 <Font size="12.0" />
+             </font>
+             <VBox.margin>
+                 <Insets left="10.0" right="10.0" />
+             </VBox.margin>
+             </Label>
+            <HBox alignment="BOTTOM_CENTER" prefHeight="75.0" prefWidth="200.0">
+               <children>
+                  <CheckBox fx:id="setup_checkbox_local" mnemonicParsing="false" selected="true" text="local">
+                     <HBox.margin>
+                        <Insets bottom="3.0" />
+                     </HBox.margin></CheckBox>
+                  <CheckBox fx:id="setup_checkbox_shh" mnemonicParsing="false" text="ssh">
+                     <HBox.margin>
+                        <Insets bottom="3.0" left="35.0" top="6.0" />
+                     </HBox.margin>
+                  </CheckBox>
+                  <Button fx:id="setup_button_begin" alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" mnemonicParsing="false" style="-fx-background-color: #c6c6c6;" text="Begin" textOverrun="LEADING_ELLIPSIS">
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children></VBox>
+   </children>
+
+</HBox>
