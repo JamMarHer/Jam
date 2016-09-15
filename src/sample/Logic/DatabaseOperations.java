@@ -35,7 +35,7 @@ public class DatabaseOperations {
 
             stmt = c.createStatement();
             String sql = "CREATE TABLE settings " +
-                    "(ID INT PRIMARY KEY    NOT NULL,"+
+                    "(ID INT     NOT NULL,"+
                     "EXT_DIR         TEXT, " +
                     "DAIKON_DIR         TEXT"+
                     ")";
@@ -69,7 +69,7 @@ public class DatabaseOperations {
                 stmt.executeUpdate(sql);
                 created = true;
             }
-            if(option.equals("daikonDir")){
+            if(option.equals("extDaikon")){
                 String sql = "INSERT INTO settings (ID, DAIKON_DIR) VALUES (2, '"+data+"' );";
                 stmt.executeUpdate(sql);
                 created =true;
@@ -80,7 +80,7 @@ public class DatabaseOperations {
             c.close();
         } catch ( Exception e ) {
             System.out.print("insert");
-            System.err.println( e.getClass().getName() + ": insertData " + e.getMessage() );
+            System.out.println( e.getClass().getName() + ": insertData " + e.getMessage() );
             System.exit(0);
         }
         return created;
@@ -103,6 +103,16 @@ public class DatabaseOperations {
                 System.out.print(data + "From DB");
                 statement.executeUpdate(sql);
                 c.commit();
+                System.out.print("updates Ext");
+                updated = true;
+            }
+            if (option.equals("extDaikon")) {
+
+                String sql = "UPDATE settings set DAIKON_DIR = '" + data +"' WHERE ID=2;";
+                System.out.print(data + "From DB");
+                statement.executeUpdate(sql);
+                c.commit();
+                System.out.print("updates Daikon");
                 updated = true;
             }
             statement.close();
@@ -123,6 +133,7 @@ public class DatabaseOperations {
 
         Connection c = null;
         Statement stmt = null;
+        Statement stmt2 = null;
         String toReturn =  "null";
         try {
             Class.forName("org.sqlite.JDBC");
@@ -131,12 +142,17 @@ public class DatabaseOperations {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
+            stmt2 = c.createStatement();
             ResultSet rs = stmt.executeQuery( "SELECT * FROM settings WHERE ID=1;" );
             //while ( rs.next() ) {
             //    String extDir = rs.getString("EXT_DIR");
             //}
             if(option.equals("extDir")) {
                 toReturn = rs.getString("EXT_DIR");
+            }
+            ResultSet rss = stmt2.executeQuery( "SELECT * FROM settings WHERE ID=2;" );
+            if(option.equals("extDaikon")) {
+                toReturn = rss.getString("DAIKON_DIR");
             }
             rs.close();
             stmt.close();

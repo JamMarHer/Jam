@@ -24,6 +24,9 @@ public class Main extends Application {
 
         databaseOperations = new DatabaseOperations();
         if(!databaseOperations.checkDBPresent()){
+            databaseOperations.generateDatabase();
+            databaseOperations.insertData("extDir", "/...");
+            databaseOperations.insertData("extDaikon", "/...");
             InitialSetup initialSetup = new InitialSetup();
             initialSetup.display();
         }else {

@@ -50,7 +50,7 @@
                         <Insets left="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="setup_daikon_button_locatedirectory" mnemonicParsing="false" style="-fx-background-color: #c6c6c6;" text="Locate Path">
+                <Button fx:id="setup_daikon_button_locatedirectory" mnemonicParsing="false" onAction="#InitialSettingImplementationLocateDirectory" style="-fx-background-color: #c6c6c6;" text="Locate Path">
                     <opaqueInsets>
                         <Insets left="10.0" />
                     </opaqueInsets>

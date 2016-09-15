@@ -49,8 +49,9 @@ public class SettingsMenuController implements Initializable {
 
         databaseOperations = new DatabaseOperations();
         extPath = databaseOperations.retrieveData("extDir");
+        daikonPath = databaseOperations.retrieveData("extDaikon");
         MenuSettingImplementationPath.setText(extPath);
-        MenuSettingDaikonPath.setText(extPath);
+        MenuSettingDaikonPath.setText(daikonPath);
 
         MenuSettingImplementation.setOnAction(event -> {
             MenuSettingImplementation.setStyle("-fx-background-color: " + selectedColor +";");
@@ -67,6 +68,8 @@ public class SettingsMenuController implements Initializable {
             DaikonSettings.setVisible(true);
 
         });
+
+
 
 
     }
@@ -107,7 +110,7 @@ public class SettingsMenuController implements Initializable {
     @FXML
     private void MenuSettingImplementationApply (ActionEvent event){
         if(tempScene == 0){ databaseOperations.updateData("extDir", extPath);}
-        if(tempScene == 1){databaseOperations.updateData("extDaikon", extPath);}
+        if(tempScene == 1){ databaseOperations.updateData("extDaikon", extPath);}
         System.out.println("updating " + tempScene +" " + extPath);
     }
 
