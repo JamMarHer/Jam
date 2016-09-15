@@ -42,7 +42,7 @@
     <left>
         <TreeTableView minHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <columns>
-                <TreeTableColumn prefWidth="200" resizable="false" text="Nodes" />
+                <TreeTableColumn fx:id="nodesMainTreeTable" prefWidth="200" resizable="false" text="Nodes" />
             </columns>
         </TreeTableView>
     </left>

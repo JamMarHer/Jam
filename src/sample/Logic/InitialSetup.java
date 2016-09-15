@@ -20,12 +20,9 @@ public class InitialSetup {
 
     public  void display() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/setup.fxml"));
-
         Stage window = new Stage();
-
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Initial Setup - Mushroom");
-
+        window.setTitle("Initial Setup - Mushroom");    
         Scene scene = new Scene(root);
         window.setScene(scene);
         window.setResizable(false);
