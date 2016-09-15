@@ -1,17 +1,10 @@
 package sample.Logic;
 
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -26,8 +19,6 @@ public class InitialSetup {
     public boolean clicked = false;
 
     public  void display() throws IOException {
-
-
         Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/setup.fxml"));
 
         Stage window = new Stage();

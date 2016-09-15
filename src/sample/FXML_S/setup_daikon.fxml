@@ -5,13 +5,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="setup_daikon" maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.InitialSetupController">
+<BorderPane fx:id="setup_daikon" maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.InitialSetupController">
+<center>
+    <VBox maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Text fill="#3c3c3c" strokeType="OUTSIDE" strokeWidth="0.0" text="Daikon">
             <font>
@@ -30,9 +33,17 @@
                 <Insets left="10.0" right="10.0" top="10.0" />
             </VBox.margin>
         </Label>
-
-
-        <HBox prefHeight="12.0" prefWidth="200.0">
+    </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets top="30.0" />
+         </BorderPane.margin>
+</VBox>
+    </center>
+    <bottom>
+        <HBox alignment="BOTTOM_CENTER" prefHeight="12.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="setup_daikon_button_back" mnemonicParsing="false" style="-fx-background-color: #9e7171;" text="Back" textFill="#282828">
                     <HBox.margin>
@@ -66,9 +77,9 @@
                     </HBox.margin>
                 </Button>
             </children>
-            <VBox.margin>
-                <Insets top="313.0" />
-            </VBox.margin>
+         <BorderPane.margin>
+            <Insets bottom="10.0" />
+         </BorderPane.margin>
         </HBox>
-    </children>
-</VBox>
+        </bottom>
+    </BorderPane>

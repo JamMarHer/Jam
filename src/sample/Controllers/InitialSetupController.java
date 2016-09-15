@@ -12,10 +12,12 @@ import javafx.scene.control.TextBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import jdk.nashorn.internal.runtime.ECMAException;
+import sample.Logic.DatabaseOperations;
 import sample.Logic.InitialSetup;
 
 import java.io.File;
@@ -33,12 +35,12 @@ public class InitialSetupController implements Initializable {
     @FXML CheckBox setup_checkbox_local = new CheckBox();
     @FXML CheckBox setup_checkbox_shh = new CheckBox();
     @FXML Button setup_button_begin = new Button();
-    @FXML VBox setup_ros = new VBox();
+    @FXML BorderPane setup_ros = new BorderPane();
     @FXML Button setup_ros_button_locatedirectory = new Button();
     @FXML TextField setup_ros_edittext_path = new TextField();
     @FXML Button setup_ros_button_next = new Button();
     @FXML Button setup_ros_button_back = new Button();
-    @FXML VBox setup_daikon = new VBox();
+    @FXML BorderPane setup_daikon = new BorderPane();
     @FXML Button setup_daikon_button_locatedirectory = new Button();
     @FXML TextField setup_daikon_edittext_path = new TextField();
     @FXML Button setup_daikon_button_next = new Button();
@@ -76,6 +78,14 @@ public class InitialSetupController implements Initializable {
         }
     }
 
+    private  void setupDB(DatabaseOperations databaseOperations, String ExtDir, String DaikonDir){
+        System.out.println("DB not present");
+        databaseOperations.generateDatabase();
+        databaseOperations.insertData("extDir",ExtDir);
+        databaseOperations.insertData("daikonDir", DaikonDir);
+    }
+
+    //param load ~/Simulation/ardupilot/Tools/Frame_params/Erle-Copter.param
 
 
 

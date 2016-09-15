@@ -24,7 +24,6 @@ public class Main extends Application {
 
         databaseOperations = new DatabaseOperations();
         if(!databaseOperations.checkDBPresent()){
-            setupDB();
             InitialSetup initialSetup = new InitialSetup();
             initialSetup.display();
         }else {
@@ -36,12 +35,7 @@ public class Main extends Application {
         }
     }
 
-    private  void setupDB(){
-        System.out.println("DB not present");
-        databaseOperations.generateDatabase();
-        databaseOperations.insertData("extDir","...");
-        databaseOperations.insertData("daikonDir", "...");
-    }
+
 
     private  void startSystem(){
         System.out.println("Initializing roscore...");
