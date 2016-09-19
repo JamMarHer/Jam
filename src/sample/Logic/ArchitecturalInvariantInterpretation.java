@@ -148,6 +148,4 @@ public class ArchitecturalInvariantInterpretation {
         }
         return toReturn;
     }
-
-
 }
