@@ -10,18 +10,12 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.runtime.ECMAException;
 import sample.Logic.DatabaseOperations;
-import sample.Logic.InitialSetup;
 
 import java.io.File;
 import java.net.URL;
-import java.security.spec.ECField;
-import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 /**
