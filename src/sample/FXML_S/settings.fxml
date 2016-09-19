@@ -12,14 +12,14 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.2391304347826087" maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #A3A3A3;" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.SettingsMenuController">
+<SplitPane dividerPositions="0.2391304347826087" maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: #A3A3A3;" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.SettingsMenuController">
   <items>
-    <AnchorPane minHeight="0.0" minWidth="150.0" prefHeight="160.0" prefWidth="100.0">
+    <AnchorPane minHeight="0.0" minWidth="190" prefHeight="160.0" maxWidth="190">
          <children>
-            <VBox prefHeight="448.0" prefWidth="187.0" style="-fx-background-color: #A6A6A6;">
+            <VBox prefHeight="448.0" minWidth="190" maxWidth="190" style="-fx-background-color: #A6A6A6;">
                <children>
-                  <Button fx:id="MenuSettingImplementation" mnemonicParsing="false" prefHeight="26.0" prefWidth="190.0" scaleShape="false" style="-fx-background-color: #747474;" text="Implementation" />
-                  <Button fx:id="MenuSettingDaikon" mnemonicParsing="false" prefHeight="26.0" prefWidth="188.0" style="-fx-background-color: #747474;" text="Daikon">
+                  <Button fx:id="MenuSettingImplementation" mnemonicParsing="false" prefHeight="26.0" minWidth="190" maxWidth="190" scaleShape="false" style="-fx-background-color: #747474;" text="Implementation" />
+                  <Button fx:id="MenuSettingDaikon" mnemonicParsing="false" prefHeight="26.0" minWidth="190" maxWidth="190" style="-fx-background-color: #747474;" text="Daikon">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -88,7 +88,7 @@
                         <Blend />
                      </effect>
                      <VBox.margin>
-                        <Insets left="530.0" top="330.0" />
+                        <Insets left="530.0" top="300.0" />
                      </VBox.margin>
                   </Button>
                </children>
@@ -148,7 +148,7 @@
                         <Blend />
                      </effect>
                      <VBox.margin>
-                        <Insets left="530.0" top="330.0" />
+                        <Insets left="530.0" top="300.0" />
                      </VBox.margin>
                   </Button>
                </children>
