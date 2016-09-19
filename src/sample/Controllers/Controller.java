@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import sample.Logic.DatabaseOperations;
@@ -20,6 +21,7 @@ public class Controller implements Initializable {
     private boolean environmentSetup = false;
 
     @FXML private javafx.scene.control.MenuItem settings;
+    @FXML private MenuItem close;
     @FXML private Line mainEnvironmentNotSetupLine = new Line();
     @FXML private Text mainEnvironmentNotSetupLabel = new Text();
     @FXML private Button architecturalInvariantTest = new Button();
@@ -48,7 +50,7 @@ public class Controller implements Initializable {
             }
             System.out.println("It works");
         });
-
+        close.setOnAction(event -> System.exit(0));
         /*MenuImplementation.setOnAction(event -> {
             System.out.print("hello");
         });

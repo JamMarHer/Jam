@@ -68,10 +68,6 @@ public class SettingsMenuController implements Initializable {
             DaikonSettings.setVisible(true);
 
         });
-
-
-
-
     }
 
     // Recode the Below method to handle events from all buttons in the left pane
