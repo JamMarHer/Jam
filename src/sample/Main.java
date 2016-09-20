@@ -32,15 +32,14 @@ public class Main extends Application {
             initialSetup.display();
         }else {
             Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/sample.fxml"));
-            Scene scene = new Scene(root, 1200, 700);
+            Scene scene = new Scene(root);
             primaryStage.getIcons().add(new Image("/sample/images/post_icon.png"));
             primaryStage.setTitle("Mushroom");
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
             primaryStage.show();
         }
     }
-
-
 
     private  void startSystem(){
         System.out.println("Initializing roscore...");

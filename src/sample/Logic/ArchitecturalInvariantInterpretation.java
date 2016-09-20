@@ -34,6 +34,7 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
     private String inputFile;
     private boolean processed;
     private HashMap<String, HashMap<String, Integer>> size;
+    private int generalSize;
     private String[] statesToAnalize;
 
     public ArchitecturalInvariantInterpretation(File file) throws InputProcessingException{
@@ -41,6 +42,7 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
         generalMapInput = new HashMap<>();
         size = new HashMap<>();
         statesToAnalize = new String[]{"Variable", "Static", "Restricted"};
+        generalSize = 0;
 
 
         if(!(generalArrayInput.get(0).equals(" ::::::: Post-Dikon Filter ::: "))){
@@ -90,13 +92,13 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
             } else if(line.split(" ")[0].equals("::::")){
                 tempMax = processLineData(line);
                 generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("Max", tempMax);
-                int tempin = size.get(currentNode).get(currentState) +1;
-                size.get(currentNode).put(currentState, tempin);
+                size.get(currentNode).put(currentState, size.get(currentNode).get(currentState) +1);
+                generalSize++;
             } else if(line.split(" ")[0].equals(":::")){
                 tempMinMax = processLineData(line);
                 generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("MinMax", tempMinMax);
-                int tempin = size.get(currentNode).get(currentState) +1;
-                size.get(currentNode).put(currentState, tempin);
+                size.get(currentNode).put(currentState, size.get(currentNode).get(currentState) +1);
+                generalSize++;
             }
         }
         processed = true;
@@ -116,9 +118,14 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
         return toReturn;
     }
 
+    public int getSize(){
+        return generalSize;
+    }
+
     public int getSize(String node, String state){
         return size.get(node).get(state);
     }
+
 
     public String getTimeStamp(){
         return timeStamp;

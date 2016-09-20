@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -27,7 +28,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="MainPane" minWidth="1200" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<BorderPane fx:id="MainPane" maxHeight="700" maxWidth="1200" minHeight="700" minWidth="1200" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
 
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -106,7 +107,7 @@
                                        <Font size="17.0" />
                                     </font>
                                             </Label>
-                                            <Line endX="100.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
+                                            <Line endX="50.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
                                             <Label fx:id="InputStimeStamp" text="Label">
                                                 <VBox.margin>
                                                     <Insets left="5.0" />
@@ -116,27 +117,131 @@
                                                 </font>
                                             </Label>
                                             <HBox prefHeight="100.0" prefWidth="200.0">
+                                    <VBox prefHeight="150.0" prefWidth="300.0">
+                                       <children>
+                                          <Label fx:id="InputTotalPub" text="Label">
+                                             <VBox.margin>
+                                                <Insets top="20.0" />
+                                             </VBox.margin></Label>
+                                          <Label fx:id="InputTotalSub" text="Label">
+                                             <VBox.margin>
+                                                <Insets top="5.0" />
+                                             </VBox.margin></Label>
+                                          <Label fx:id="InputTotalServ" text="Label">
+                                             <VBox.margin>
+                                                <Insets top="5.0" />
+                                             </VBox.margin></Label>
+                                          <Label fx:id="InputTotal" text="Label">
+                                             <VBox.margin>
+                                                <Insets top="5.0" />
+                                             </VBox.margin></Label>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </VBox>
                                                 <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                                 <VBox alignment="CENTER_RIGHT">
-                                                    <BarChart fx:id="BarChartII" animated="false" legendSide="LEFT">
+                                                    <BarChart fx:id="BarChartII" animated="false" legendSide="LEFT" HBox.hgrow="ALWAYS">
                                                         <xAxis>
                                                             <CategoryAxis side="BOTTOM" />
                                                         </xAxis>
                                                         <yAxis>
                                                             <NumberAxis side="LEFT" />
                                                         </yAxis>
+                                          <VBox.margin>
+                                             <Insets right="10.0" />
+                                          </VBox.margin>
                                                     </BarChart>
                                        <HBox.margin>
-                                          <Insets right="5.0" />
+                                          <Insets right="20.0" />
                                        </HBox.margin>
                                                 </VBox>
                                     <VBox.margin>
                                        <Insets />
                                     </VBox.margin>
                                             </HBox>
+                                 <Line endX="200.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
+                                 <VBox prefHeight="100.0" prefWidth="100.0">
+                                    <children>
+                                       <Label text="In order to start the Architectural Invariant Test it is necessary to provide the path of the project and to the ros launch or run file." wrapText="true">
+                                          <VBox.margin>
+                                             <Insets left="5.0" top="5.0" />
+                                          </VBox.margin>
+                                       </Label>
+                                       <Label text="The project path (ros_catkin_ws) is necessary to setup the environment. The lauch/run file is necessary to initialize the system.">
+                                          <VBox.margin>
+                                             <Insets left="5.0" />
+                                          </VBox.margin>
+                                       </Label>
+                                        <Button fx:id="testing_project_button_locatedirectory" mnemonicParsing="false" onAction="#testingLocatePath" prefHeight="20.0" style="-fx-background-color: lightgray;" text="Project ros_catkin_ws">
+                                            <opaqueInsets>
+                                                <Insets left="10.0" />
+                                            </opaqueInsets>
+                                            <effect>
+                                                <Blend />
+                                            </effect>
+                                          <graphic>
+                                              <TextField fx:id="testing_prokect_edittext_path" maxHeight="20.0" prefHeight="20.0" prefWidth="400.0" text="  /...">
+                                                  <opaqueInsets>
+                                                      <Insets />
+                                                  </opaqueInsets>
+                                                  <font>
+                                                      <Font size="12.0" />
+                                                  </font>
+                                              </TextField>
+                                          </graphic>
+                                          <VBox.margin>
+                                             <Insets left="10.0" top="5.0" />
+                                          </VBox.margin>
+                                        </Button>
+                                        <Button fx:id="testing_project_button_locate_launch_run" mnemonicParsing="false" onAction="#testingLocatePath" prefHeight="20.0" style="-fx-background-color: lightgray;" text="Project    .launch/.run">
+                                            <opaqueInsets>
+                                                <Insets left="10.0" />
+                                            </opaqueInsets>
+                                            <HBox.margin>
+                                                <Insets top="5.0" />
+                                            </HBox.margin>
+                                            <effect>
+                                                <Blend />
+                                            </effect>
+                                            <graphic>
+                                                <TextField fx:id="testing_prokect_edittext_path_launch_run" maxHeight="20.0" prefHeight="20.0" prefWidth="400.0" text="  /...">
+                                                    <opaqueInsets>
+                                                        <Insets />
+                                                    </opaqueInsets>
+                                                    <font>
+                                                        <Font size="12.0" />
+                                                    </font>
+                                                </TextField>
+                                            </graphic>
+                                          <VBox.margin>
+                                             <Insets left="10.0" top="5.0" />
+                                          </VBox.margin>
+                                        </Button>
+                                    </children></VBox>
+                                 <Line endX="400.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0">
+                                    <VBox.margin>
+                                       <Insets bottom="5.0" right="5.0" top="10.0" />
+                                    </VBox.margin>
+                                 </Line>
+                                 <Label text="Tests can take a long time and it is recommended to not work on ros projects while in execution. This can cause problems.">
+                                    <VBox.margin>
+                                       <Insets left="5.0" />
+                                    </VBox.margin>
+                                 </Label>
+                                 <Label text="Mushroom would verify that the version of ROS being used is unaltered (it would change back to prior projects modifications), this to mimic a real scenario." wrapText="true">
+                                    <VBox.margin>
+                                       <Insets left="5.0" />
+                                    </VBox.margin>
+                                 </Label>
+
                                         </children>
-                                    </VBox>
-                                </children></AnchorPane>
+
+                                        
+                                        </VBox>
+                                </children>
+                            </AnchorPane>
 
                         </content>
                     </Tab>

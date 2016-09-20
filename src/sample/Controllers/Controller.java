@@ -13,6 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import sample.Interfaces.ReportInterpretation;
 import sample.Logic.ArchitecturalInvariantInterpretation;
 import sample.Logic.DatabaseOperations;
@@ -20,6 +23,7 @@ import sample.Logic.MenuSettings;
 import sample.Logic.TestSuite;
 import sample.Main;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -39,10 +43,21 @@ public class Controller implements Initializable {
     @FXML private StackPane MainStackPane = new StackPane();
     @FXML private Label InputStimeStamp = new Label();
     @FXML private Label InputText = new Label();
+    @FXML private Label InputTotalPub = new Label();
+    @FXML private Label InputTotalSub = new Label();
+    @FXML private Label InputTotalServ = new Label();
+    @FXML private Label InputTotal = new Label();
+    @FXML private Button testing_project_button_locatedirectory = new Button();
+    @FXML private TextField testing_prokect_edittext_path = new TextField();
+    @FXML private Button testing_project_button_locate_launch_run = new Button();
+    @FXML private TextField testing_prokect_edittext_path_launch_run = new TextField();
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
     @FXML private BarChart<String, Number> BarChartII = new BarChart<String, Number>(xAxys,yAxys);
     private ReportInterpretation RI;
+    private String projectTestPath;
+    private String projectTestLaunchRun;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -97,10 +112,55 @@ public class Controller implements Initializable {
         series3.getData().add(new XYChart.Data<String,Number>("Publisher", AII.getSize("/rec/arch_pub", "Restricted")));
         series3.getData().add(new XYChart.Data<String,Number>("Subscriber", AII.getSize("/rec/arch_sub", "Restricted")));
         series3.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Restricted")));
-
-        BarChartII.getData().addAll(series,series2,series3);
+        BarChartII.getData().setAll(series,series2,series3);
         BarChartII.setVisible(true);
         BarChartII.impl_updatePeer();
+
+        InputTotalPub.setText("/rec/arch_pub:   "+String.valueOf(AII.getSize("/rec/arch_pub", "Static")+AII.getSize("/rec/arch_pub", "Variable")+AII.getSize("/rec/arch_pub", "Restricted")));
+        InputTotalSub.setText("/rec/arch_sub:   "+String.valueOf(AII.getSize("/rec/arch_sub", "Variable")+AII.getSize("/rec/arch_sub", "Static")+AII.getSize("/rec/arch_sub", "Restricted")));
+        InputTotalServ.setText("/rec/arch_srvs:  "+String.valueOf(AII.getSize("/rec/arch_srvs", "Static")+AII.getSize("/rec/arch_srvs", "Variable")+AII.getSize("/rec/arch_srvs", "Restricted")));
+        InputTotal.setText("Total:                "+String.valueOf(AII.getSize()));
+    }
+    // Tests can take a long time and it is recommended to not work on ros projects while in execution. This can cause problems.
+    // Mushroom would verify that the version of ROS being used is unaltered (it would change back to prior projects modifications), this to mimic a real scenario.
+
+
+
+    @FXML
+    public void testingLocatePath(ActionEvent event){
+        Stage stage = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
+        chooseFile(stage, "project");
+    }
+    @FXML
+    public void testingLocateLaunchRun(ActionEvent event){
+        Stage stage = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
+        chooseFile(stage, "launch_run");
+    }
+
+    private void chooseFile(Stage stage, String from){
+        try {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            if(from.equals("project")) {
+                directoryChooser.setTitle("Project path");
+                File selectedDirectory = directoryChooser.showDialog(stage);
+                projectTestPath = selectedDirectory.getAbsolutePath();
+                testing_prokect_edittext_path.setText(selectedDirectory.getAbsolutePath());
+
+            }
+            if(from.equals("launch_run")) {
+                directoryChooser.setTitle("Launch/Run");
+                File selectedDirectory = directoryChooser.showDialog(stage);
+                projectTestLaunchRun= selectedDirectory.getAbsolutePath();
+                testing_prokect_edittext_path_launch_run.setText(selectedDirectory.getAbsolutePath());
+            }
+
+        }catch (Exception e){
+            System.out.print("Path selection canceled");
+            e.printStackTrace();
+        }
+    }
+
+    private void analizePath(String path){
 
     }
 }

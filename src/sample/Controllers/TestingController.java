@@ -44,7 +44,6 @@ public class TestingController implements Initializable {
 
     private void chooseFile(Stage stage){
         try {
-
             FileChooser directoryChooser = new FileChooser();
             directoryChooser.setTitle("post-daikon filtered file path");
             File selectedFile = directoryChooser.showOpenDialog(stage);
@@ -54,7 +53,6 @@ public class TestingController implements Initializable {
             System.out.print("Path selection canceled");
             e.printStackTrace();
         }
-
     }
 
     @FXML
