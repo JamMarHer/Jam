@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Control;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -22,6 +23,7 @@ import java.util.ResourceBundle;
 public class TestingController implements Initializable {
 
     @FXML Text test_title = new Text();
+    @FXML TextField testing_edittext_path = new TextField();
     private String test = "";
     private File post_DaikonFilteredFile;
     @Override
@@ -41,6 +43,7 @@ public class TestingController implements Initializable {
             directoryChooser.setTitle("post-daikon filtered file path");
             File selectedFile = directoryChooser.showOpenDialog(stage);
             post_DaikonFilteredFile = selectedFile.getAbsoluteFile();
+            testing_edittext_path.setText(post_DaikonFilteredFile.getAbsolutePath());
         }catch (Exception e){
             System.out.print("Path selection canceled");
             e.printStackTrace();
