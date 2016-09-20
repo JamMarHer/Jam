@@ -84,19 +84,19 @@ public class Controller implements Initializable {
         yAxys.setLabel("Quantity");
         XYChart.Series series = new XYChart.Series();
         series.setName("Static");
-        series.getData().add(new XYChart.Data<String,Number>("Publisher", 10));
-        series.getData().add(new XYChart.Data<String,Number>("Subscriber", 5));
-        series.getData().add(new XYChart.Data<String,Number>("Services", 3));
+        series.getData().add(new XYChart.Data<String,Number>("Publisher", AII.getSize("/rec/arch_pub", "Static")));
+        series.getData().add(new XYChart.Data<String,Number>("Subscriber", AII.getSize("/rec/arch_sub", "Static")));
+        series.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Static")));
         XYChart.Series series2 = new XYChart.Series();
         series2.setName("Variable");
-        series2.getData().add(new XYChart.Data<String,Number>("Publisher", 4));
-        series2.getData().add(new XYChart.Data<String,Number>("Subscriber", 6));
-        series2.getData().add(new XYChart.Data<String,Number>("Services", 7));
+        series2.getData().add(new XYChart.Data<String,Number>("Publisher", AII.getSize("/rec/arch_pub", "Variable")));
+        series2.getData().add(new XYChart.Data<String,Number>("Subscriber", AII.getSize("/rec/arch_sub", "Variable")));
+        series2.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Variable")));
         XYChart.Series series3 = new XYChart.Series();
         series3.setName("Restricted Variable");
-        series3.getData().add(new XYChart.Data<String,Number>("Publisher", 1));
-        series3.getData().add(new XYChart.Data<String,Number>("Subscriber", 8));
-        series3.getData().add(new XYChart.Data<String,Number>("Services", 9));
+        series3.getData().add(new XYChart.Data<String,Number>("Publisher", AII.getSize("/rec/arch_pub", "Restricted")));
+        series3.getData().add(new XYChart.Data<String,Number>("Subscriber", AII.getSize("/rec/arch_sub", "Restricted")));
+        series3.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Restricted")));
 
         BarChartII.getData().addAll(series,series2,series3);
         BarChartII.setVisible(true);

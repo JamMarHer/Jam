@@ -33,11 +33,16 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
     private String timeStamp;
     private String inputFile;
     private boolean processed;
-    private int size;
+    private HashMap<String, HashMap<String, Integer>> size;
+    private String[] statesToAnalize;
 
     public ArchitecturalInvariantInterpretation(File file) throws InputProcessingException{
         generalArrayInput = inputProcess(file);
         generalMapInput = new HashMap<>();
+        size = new HashMap<>();
+        statesToAnalize = new String[]{"Variable", "Static", "Restricted"};
+
+
         if(!(generalArrayInput.get(0).equals(" ::::::: Post-Dikon Filter ::: "))){
             throw new InputProcessingException("Input is not marked as a Post-Daikon filtered file");
         }
@@ -65,10 +70,14 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
         ArrayList<String> tempMin;
         ArrayList<String> tempMax;
         ArrayList<String> tempMinMax;
+        int k =0;
         for(String line : generalArrayInput){
             if(line.split(" ")[0].equals("::::::::::::::::::")){
                 currentNode = line.split(" ")[1];
                 generalMapInput.put(currentNode,new HashMap<>());
+                size.put(currentNode, new HashMap<>());
+                for(String state : statesToAnalize)
+                    size.get(currentNode).put(state,0);
             }else if(line.split(" ")[0].equals("-------------------------[")){
                 currentState = line.split(" ")[1];
                 generalMapInput.get(currentNode).put(currentState, new HashMap<>());
@@ -81,11 +90,13 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
             } else if(line.split(" ")[0].equals("::::")){
                 tempMax = processLineData(line);
                 generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("Max", tempMax);
-                size++;
+                int tempin = size.get(currentNode).get(currentState) +1;
+                size.get(currentNode).put(currentState, tempin);
             } else if(line.split(" ")[0].equals(":::")){
                 tempMinMax = processLineData(line);
                 generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("MinMax", tempMinMax);
-                size++;
+                int tempin = size.get(currentNode).get(currentState) +1;
+                size.get(currentNode).put(currentState, tempin);
             }
         }
         processed = true;
@@ -105,8 +116,8 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
         return toReturn;
     }
 
-    public int getSize(){
-        return size;
+    public int getSize(String node, String state){
+        return size.get(node).get(state);
     }
 
     public String getTimeStamp(){
