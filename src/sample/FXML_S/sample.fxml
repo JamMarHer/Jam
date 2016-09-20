@@ -19,6 +19,7 @@
 <?import javafx.scene.text.Text?>
 
 <BorderPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -88,4 +89,6 @@
             
          </children>
       </StackPane>
-   </center></BorderPane>
+   </center>
+
+</BorderPane>

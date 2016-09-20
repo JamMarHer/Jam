@@ -26,8 +26,14 @@ public class TestingController implements Initializable {
     @FXML TextField testing_edittext_path = new TextField();
     private String test = "";
     private File post_DaikonFilteredFile;
+    private ArchitecturalInvariantInterpretation AII;
+    private boolean obtainable;
+    private boolean close;
+    private Stage currentStage;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        close = false;
+        obtainable = false;
 
     }
 
@@ -53,20 +59,35 @@ public class TestingController implements Initializable {
 
     @FXML
     public void testingLocatePath(ActionEvent event){
-        Stage stage = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
-        chooseFile(stage);
+        currentStage  = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
+        chooseFile(currentStage);
     }
 
     @FXML
     public void testingNext(ActionEvent event){
+
         ArchitecturalInvariantInterpretation architecturalInvariantInterpretation;
         try{
             architecturalInvariantInterpretation = new ArchitecturalInvariantInterpretation(post_DaikonFilteredFile);
             architecturalInvariantInterpretation.processData();
+            AII = architecturalInvariantInterpretation;
             System.out.print(architecturalInvariantInterpretation.getSpecificMapFilterData("/rec/arch_pub").get("Variable").get("/rosout"));
+            obtainable = true;
+            close = true;
+            currentStage.close();
         }catch (InputProcessingException e){
             e.printStackTrace();
         }
+    }
+    public ArchitecturalInvariantInterpretation retreiveAII(){
+        return AII;
+    }
 
+    public boolean getObtainable(){
+        return obtainable;
+    }
+
+    public boolean close(){
+        return close;
     }
 }

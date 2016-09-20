@@ -15,6 +15,8 @@ import sample.Controllers.TestingController;
 public class TestSuite {
 
     private String test = "";
+    private ArchitecturalInvariantInterpretation AII;
+    private TestingController controller;
 
     public TestSuite(String _test){
         test = _test;
@@ -31,15 +33,27 @@ public class TestSuite {
                 window.initModality(Modality.APPLICATION_MODAL);
                 window.setTitle("ArchitectureTest");
                 Scene scene = new Scene(root);
-                TestingController controller =  loader.getController();
+                controller =  loader.getController();
                 controller.setTest("Architecture");
                 window.setScene(scene);
                 window.setResizable(false);
+
                 window.show();
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public ArchitecturalInvariantInterpretation reTrieveAII(){
+        return controller.retreiveAII();
+    }
+    public boolean Obtainable(){
+        return controller.getObtainable();
+    }
+
+    public boolean closed(){
+        return controller.close();
     }
 
 

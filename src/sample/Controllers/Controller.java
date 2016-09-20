@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import sample.Logic.ArchitecturalInvariantInterpretation;
 import sample.Logic.DatabaseOperations;
 import sample.Logic.MenuSettings;
 import sample.Logic.TestSuite;
@@ -25,6 +26,8 @@ public class Controller implements Initializable {
     @FXML private Line mainEnvironmentNotSetupLine = new Line();
     @FXML private Text mainEnvironmentNotSetupLabel = new Text();
     @FXML private MenuItem architecturalInvariantTest = new MenuItem();
+
+    private ArchitecturalInvariantInterpretation AII;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -51,8 +54,16 @@ public class Controller implements Initializable {
         architecturalInvariantTest.setOnAction(event -> {
             TestSuite testSuite = new TestSuite("Architecture");
             testSuite.display();
+            while (!(testSuite.Obtainable())){
+                if(testSuite.closed()){
+                    break;
+                }
+            }
+            AII = testSuite.reTrieveAII();
             System.out.print("In");
         });
     }
+
+
 
 }
