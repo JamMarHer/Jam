@@ -1,5 +1,7 @@
 package sample.Logic;
 
+import sample.Interfaces.ReportInterpretation;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,7 +20,7 @@ import java.util.HashMap;
     // :::: = max | 4
     // ::: = minMax | 3
 
-public class ArchitecturalInvariantInterpretation {
+public class ArchitecturalInvariantInterpretation implements ReportInterpretation {
 
     private ArrayList<String> generalArrayInput;
     // 1) HashMap::: String:: recording node;
@@ -26,10 +28,12 @@ public class ArchitecturalInvariantInterpretation {
     //          3) HashMap:: String:: topic/service;
     //              4) HashMap:: String:: min or max or minMax;
     //                  5) ArrayList:: data.
+    private static final String ID = "AII";
     private HashMap<String, HashMap<String,HashMap<String, HashMap<String, ArrayList<String>>>>> generalMapInput;
     private String timeStamp;
     private String inputFile;
     private boolean processed;
+    private int size;
 
     public ArchitecturalInvariantInterpretation(File file) throws InputProcessingException{
         generalArrayInput = inputProcess(file);
@@ -48,6 +52,10 @@ public class ArchitecturalInvariantInterpretation {
             inputFile = generalArrayInput.get(3).split(" ")[2];
         }
         processed = false;
+    }
+
+    public String getID(){
+        return ID;
     }
 
     public void processData(){
@@ -73,9 +81,11 @@ public class ArchitecturalInvariantInterpretation {
             } else if(line.split(" ")[0].equals("::::")){
                 tempMax = processLineData(line);
                 generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("Max", tempMax);
+                size++;
             } else if(line.split(" ")[0].equals(":::")){
                 tempMinMax = processLineData(line);
                 generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("MinMax", tempMinMax);
+                size++;
             }
         }
         processed = true;
@@ -93,6 +103,10 @@ public class ArchitecturalInvariantInterpretation {
             i++;
         }
         return toReturn;
+    }
+
+    public int getSize(){
+        return size;
     }
 
     public String getTimeStamp(){

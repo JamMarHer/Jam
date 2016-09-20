@@ -14,7 +14,7 @@
 
 <BorderPane maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.TestingController">
     <center>
-        <VBox maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
+        <VBox  maxHeight="450.0" maxWidth="800.0" minHeight="450.0" minWidth="800.0" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
             <children>
                 <Text fx:id="test_title" fill="#3c3c3c" strokeType="OUTSIDE" strokeWidth="0.0" text="Architecture Test">
                     <font>
@@ -66,7 +66,7 @@
                         <Font size="12.0" />
                     </font>
                 </TextField>
-                <Button fx:id="testing_button_next" mnemonicParsing="false" onAction="#testingNext" style="-fx-background-color: #9e7171;" text="Next" textFill="#282828">
+                <Button fx:id="testing_button_next" mnemonicParsing="false" onAction="#testingNext" style="-fx-background-color: #9e7171;" text="Load" textFill="#282828">
                     <HBox.margin>
                         <Insets left="10.0" />
                     </HBox.margin>

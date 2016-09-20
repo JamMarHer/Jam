@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeTableColumn?>
@@ -15,10 +21,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<BorderPane fx:id="MainPane" minWidth="1200" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
 
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -48,21 +56,29 @@
         </MenuBar>
     </top>
     <left>
-        <TreeTableView minHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <AnchorPane>
+        <TreeTableView minHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
             <columns>
-                <TreeTableColumn fx:id="nodesMainTreeTable" prefWidth="200" resizable="false" text="Nodes" />
+                <TreeTableColumn fx:id="nodesMainTreeTable" prefWidth="200" text="Nodes" />
             </columns>
         </TreeTableView>
+        </AnchorPane>
     </left>
     <bottom>
-        <TitledPane animated="true" maxHeight="65.0" minHeight="50.0" text="ROS Commands" BorderPane.alignment="CENTER">
+        <TitledPane animated="true" maxHeight="65.0" minHeight="65.0" text="ROS Commands" BorderPane.alignment="CENTER">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="1200.0" prefHeight="200.0">
                     <children>
-                        <HBox maxWidth="1200.0" minWidth="1200.0" prefHeight="24.0">
+                        <HBox maxWidth="1200.0" minWidth="1200.0" prefHeight="24.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
-                                <TextField fx:id="RosConsole" maxWidth="1150" minWidth="1150" />
-                                <Button fx:id="RosConsoleRun" maxWidth="50" minWidth="50" mnemonicParsing="false" text="Run" />
+                                <TextField fx:id="RosConsole" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="5.0" />
+                           </HBox.margin></TextField>
+                                <Button fx:id="RosConsoleRun" maxWidth="50" minWidth="50" mnemonicParsing="false" text="Run" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="5.0" />
+                           </HBox.margin></Button>
                             </children></HBox>
                     </children>
                 </AnchorPane>
@@ -70,7 +86,52 @@
         </TitledPane>
     </bottom>
    <center>
-      <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #c6c6c6;" BorderPane.alignment="CENTER_RIGHT">
+       <AnchorPane>
+       <TabPane fx:id="MainTesting" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600" minWidth="1000" nodeOrientation="LEFT_TO_RIGHT" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
+           <tabs>
+
+               <Tab text="Untitled Tab 1">
+                   <content>
+
+                       <AnchorPane minHeight="600" minWidth="1000.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <VBox fx:id="MainTestingTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
+                                <children>
+                                    <Label fx:id="InputText" text="Label">
+                                        <VBox.margin>
+                                            <Insets left="5.0" top="5.0" />
+                                        </VBox.margin>
+                                    </Label>
+                                    <Line endX="100.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
+                                    <Label fx:id="InputStimeStamp" text="Label">
+                                        <VBox.margin>
+                                            <Insets left="5.0" />
+                                        </VBox.margin>
+                                        <font>
+                                            <Font name="System Italic" size="10.0" />
+                                        </font>
+                                    </Label>
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                        <children>
+                                            <BarChart fx:id="BarChartII" animated="false">
+                                                <xAxis>
+                                                    <CategoryAxis side="BOTTOM" />
+                                                </xAxis>
+                                                <yAxis>
+                                                    <NumberAxis side="LEFT" />
+                                                </yAxis>
+                                            </BarChart>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </children></AnchorPane>
+                       
+                   </content>
+               </Tab>
+           </tabs>
+       </TabPane>
+      <StackPane fx:id="MainStackPane" prefHeight="601.0" prefWidth="1002.0" style="-fx-background-color: #c6c6c6;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER_RIGHT">
          <children>
             <Text fx:id="mainEnvironmentNotSetupLabel" fill="#6b6969" strokeType="OUTSIDE" strokeWidth="0.0" text="Environment has not been setup.">
                <StackPane.margin>
@@ -89,6 +150,7 @@
             
          </children>
       </StackPane>
+       </AnchorPane>
    </center>
 
 </BorderPane>

@@ -23,7 +23,7 @@ public class TestSuite {
 
     }
 
-    public void display(){
+    public ArchitecturalInvariantInterpretation display(){
         try{
             if(test.equals("Architecture")){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/FXML_S/testing_interface.fxml"));
@@ -37,12 +37,13 @@ public class TestSuite {
                 controller.setTest("Architecture");
                 window.setScene(scene);
                 window.setResizable(false);
-
-                window.show();
+                window.showAndWait();
+                return controller.retreiveAII();
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+        return null;
     }
 
     public ArchitecturalInvariantInterpretation reTrieveAII(){
