@@ -9,6 +9,8 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -16,7 +18,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<BorderPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -36,6 +38,11 @@
                         <MenuItem mnemonicParsing="false" text="About" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Tests">
+              <items>
+                <MenuItem fx:id="architecturalInvariantTest" mnemonicParsing="false" text="Architectural Invariant Test" />
+              </items>
+            </Menu>
             </menus>
         </MenuBar>
     </top>
@@ -47,9 +54,9 @@
         </TreeTableView>
     </left>
     <bottom>
-        <TitledPane animated="true" maxHeight="50.0" minHeight="50.0" text="ROS Commands" BorderPane.alignment="CENTER">
+        <TitledPane animated="true" maxHeight="65.0" minHeight="50.0" text="ROS Commands" BorderPane.alignment="CENTER">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="1200.0" prefHeight="180.0">
+                <AnchorPane minHeight="0.0" minWidth="1200.0" prefHeight="200.0">
                     <children>
                         <HBox maxWidth="1200.0" minWidth="1200.0" prefHeight="24.0">
                             <children>
@@ -73,11 +80,12 @@
                   <Insets bottom="20.0" />
                </StackPane.margin>
             </Line>
-            <Button fx:id="architecturalInvariantTest" mnemonicParsing="false" onAction="#architecturalInvatiantTest" style="-fx-background-color: #9e7171;" text="Architectural Invariant Test">
-               <StackPane.margin>
-                  <Insets top="50.0" />
-               </StackPane.margin>
-            </Button>
+            <ImageView fitHeight="150.0" fitWidth="200.0" opacity="0.28" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/post_icon.png" />
+               </image>
+            </ImageView>
+            
          </children>
       </StackPane>
    </center></BorderPane>

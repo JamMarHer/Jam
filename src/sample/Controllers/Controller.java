@@ -24,7 +24,7 @@ public class Controller implements Initializable {
     @FXML private MenuItem close;
     @FXML private Line mainEnvironmentNotSetupLine = new Line();
     @FXML private Text mainEnvironmentNotSetupLabel = new Text();
-    @FXML private Button architecturalInvariantTest = new Button();
+    @FXML private MenuItem architecturalInvariantTest = new MenuItem();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -35,9 +35,6 @@ public class Controller implements Initializable {
             environmentSetup = true;
             mainEnvironmentNotSetupLine.setVisible(false);
             mainEnvironmentNotSetupLabel.setVisible(false);
-            architecturalInvariantTest.setVisible(true);
-        }else {
-            architecturalInvariantTest.setVisible(false);
         }
 
         assert settings != null : "fx:id=\"settings\" was not injected: check your FXML file 'sample.fxml'.";
@@ -51,16 +48,11 @@ public class Controller implements Initializable {
             System.out.println("It works");
         });
         close.setOnAction(event -> System.exit(0));
-        /*MenuImplementation.setOnAction(event -> {
-            System.out.print("hello");
+        architecturalInvariantTest.setOnAction(event -> {
+            TestSuite testSuite = new TestSuite("Architecture");
+            testSuite.display();
+            System.out.print("In");
         });
-        */
     }
 
-    @FXML
-    public void architecturalInvatiantTest(ActionEvent event){
-        TestSuite testSuite = new TestSuite("Architecture");
-        testSuite.display();
-        System.out.print("In");
-    }
 }
