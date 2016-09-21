@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -195,7 +196,7 @@
                                              <Insets left="10.0" top="5.0" />
                                           </VBox.margin>
                                         </Button>
-                                        <Button fx:id="testing_project_button_locate_launch_run" mnemonicParsing="false" onAction="#testingLocatePath" prefHeight="20.0" style="-fx-background-color: lightgray;" text="Project    .launch/.run">
+                                        <Button fx:id="testing_project_button_locate_launch_run" mnemonicParsing="false" onAction="#testingLocateLaunchRun" prefHeight="20.0" style="-fx-background-color: lightgray;" text="Project    .launch/.run">
                                             <opaqueInsets>
                                                 <Insets left="10.0" />
                                             </opaqueInsets>
@@ -235,6 +236,11 @@
                                        <Insets left="5.0" />
                                     </VBox.margin>
                                  </Label>
+                                 <ProgressIndicator fx:id="TestingProgressIndicator" progress="0.0">
+                                    <VBox.margin>
+                                       <Insets top="150.0" />
+                                    </VBox.margin>
+                                 </ProgressIndicator>
 
                                         </children>
 

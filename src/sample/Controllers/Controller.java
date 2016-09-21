@@ -22,11 +22,16 @@ import sample.Logic.DatabaseOperations;
 import sample.Logic.MenuSettings;
 import sample.Logic.TestSuite;
 import sample.Main;
+import sample.Properties.TestingProgress;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -51,12 +56,16 @@ public class Controller implements Initializable {
     @FXML private TextField testing_prokect_edittext_path = new TextField();
     @FXML private Button testing_project_button_locate_launch_run = new Button();
     @FXML private TextField testing_prokect_edittext_path_launch_run = new TextField();
+    @FXML private ProgressBar TestingProgressBar = new ProgressBar();
+    @FXML private ProgressIndicator TestingProgressIndicator = new ProgressIndicator();
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
+    final TestingProgress testingProgress = new TestingProgress();
     @FXML private BarChart<String, Number> BarChartII = new BarChart<String, Number>(xAxys,yAxys);
     private ReportInterpretation RI;
     private String projectTestPath;
     private String projectTestLaunchRun;
+
 
 
     @Override
@@ -120,6 +129,7 @@ public class Controller implements Initializable {
         InputTotalSub.setText("/rec/arch_sub:   "+String.valueOf(AII.getSize("/rec/arch_sub", "Variable")+AII.getSize("/rec/arch_sub", "Static")+AII.getSize("/rec/arch_sub", "Restricted")));
         InputTotalServ.setText("/rec/arch_srvs:  "+String.valueOf(AII.getSize("/rec/arch_srvs", "Static")+AII.getSize("/rec/arch_srvs", "Variable")+AII.getSize("/rec/arch_srvs", "Restricted")));
         InputTotal.setText("Total:                "+String.valueOf(AII.getSize()));
+        TestingProgressIndicator.progressProperty().bind(testingProgress.stateProperty());
     }
     // Tests can take a long time and it is recommended to not work on ros projects while in execution. This can cause problems.
     // Mushroom would verify that the version of ROS being used is unaltered (it would change back to prior projects modifications), this to mimic a real scenario.
@@ -130,6 +140,7 @@ public class Controller implements Initializable {
     public void testingLocatePath(ActionEvent event){
         Stage stage = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
         chooseFile(stage, "project");
+
     }
     @FXML
     public void testingLocateLaunchRun(ActionEvent event){
