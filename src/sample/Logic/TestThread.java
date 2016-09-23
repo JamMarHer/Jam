@@ -41,7 +41,6 @@ public class TestThread extends Thread {
     public boolean getFinalEnvironmentPassed(){
         return FinalEnvironmentPassed;
     }
-
     public boolean getPathPassed(){
         return PathPassed;
     }
