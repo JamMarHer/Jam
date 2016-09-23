@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="jython-installer-2.7.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Desktop/jython-installer-2.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Desktop/jython-installer-2.7.0.jar!/Doc/javadoc" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Desktop/jython-installer-2.7.0.jar!/Demo/embed" />
+      <root url="jar://$USER_HOME$/Desktop/jython-installer-2.7.0.jar!/Demo/jreload/src" />
+      <root url="jar://$USER_HOME$/Desktop/jython-installer-2.7.0.jar!/src" />
+      <root url="jar://$USER_HOME$/Desktop/jython-installer-2.7.0.jar!/tests/java" />
+    </SOURCES>
+  </library>
+</component>

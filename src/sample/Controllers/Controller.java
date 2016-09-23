@@ -1,7 +1,9 @@
 package sample.Controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,10 +19,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.Interfaces.ReportInterpretation;
-import sample.Logic.ArchitecturalInvariantInterpretation;
-import sample.Logic.DatabaseOperations;
-import sample.Logic.MenuSettings;
-import sample.Logic.TestSuite;
+import sample.Logic.*;
 import sample.Main;
 import sample.Properties.TestingProgress;
 
@@ -58,6 +57,7 @@ public class Controller implements Initializable {
     @FXML private TextField testing_prokect_edittext_path_launch_run = new TextField();
     @FXML private ProgressBar TestingProgressBar = new ProgressBar();
     @FXML private ProgressIndicator TestingProgressIndicator = new ProgressIndicator();
+    @FXML private Label TestsStatusTest = new Label();
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
     final TestingProgress testingProgress = new TestingProgress();
@@ -65,6 +65,9 @@ public class Controller implements Initializable {
     private ReportInterpretation RI;
     private String projectTestPath;
     private String projectTestLaunchRun;
+    private TestThread testThreadROS;
+    private TestThread testThreadPoject;
+    private TestThread testThreadEnvi;
 
 
 
@@ -130,6 +133,9 @@ public class Controller implements Initializable {
         InputTotalServ.setText("/rec/arch_srvs:  "+String.valueOf(AII.getSize("/rec/arch_srvs", "Static")+AII.getSize("/rec/arch_srvs", "Variable")+AII.getSize("/rec/arch_srvs", "Restricted")));
         InputTotal.setText("Total:                "+String.valueOf(AII.getSize()));
         TestingProgressIndicator.progressProperty().bind(testingProgress.stateProperty());
+
+
+
     }
     // Tests can take a long time and it is recommended to not work on ros projects while in execution. This can cause problems.
     // Mushroom would verify that the version of ROS being used is unaltered (it would change back to prior projects modifications), this to mimic a real scenario.
@@ -169,6 +175,83 @@ public class Controller implements Initializable {
             System.out.print("Path selection canceled");
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void StartTest (ActionEvent event){
+        if(projectTestPath == null || projectTestLaunchRun == null){
+            TestsStatusTest.setText("Project Path || Project Launch/Run not set!");
+        }else {
+            try {
+                System.out.print("IN START TEST");
+                testThreadROS = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ROS");
+                processStatusIndicator("Analyzing ROS", testThreadROS);
+                testThreadROS.run();
+                testThreadROS.join();
+                if(testThreadROS.getROSPassed()) {
+                    testThreadPoject = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "PRO");
+                    processStatusIndicator("Analizing Project", testThreadPoject);
+                    testThreadPoject.run();
+                    testThreadPoject.join();
+                    if(testThreadPoject.getPathPassed()){
+                        processStatusIndicator("Analyzing Environment", testThreadEnvi);
+                        testThreadEnvi = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ENV");
+                        testThreadEnvi.run();
+                        testThreadEnvi.join();
+                        if(testThreadEnvi.getFinalEnvironmentPassed()){
+                            System.out.print("ALLSET");
+                        }else {
+                            System.out.print("DEAD IN ENV");
+                        }
+                    }else {
+                        System.out.print("DEAD IN PRO");
+                    }
+                }else {
+                    System.out.print("DEAD IN ROS");
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+
+    private void processStatusIndicator(String currentStatus, TestThread testThread){
+        Task<Void> task = new Task<Void>() {
+            @Override public Void call() {
+                int numberDots = 0;
+                String update = currentStatus;
+                String nonUpdate = currentStatus;
+                while(!testThread.getROSPassed()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Thread.interrupted();
+
+                        break;
+                    }
+
+                    if(numberDots == 3){
+                        numberDots =0;
+                        updateMessage(nonUpdate);
+                        update = nonUpdate;
+                    }else{
+                        update += ".";
+                        updateMessage(update);
+                        numberDots++;
+                    }
+                }
+                return null;
+            }
+        };
+        TestsStatusTest.textProperty().bind(task.messageProperty());
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
+
     }
 
     private void analizePath(String path){

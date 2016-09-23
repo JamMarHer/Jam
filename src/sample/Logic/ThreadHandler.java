@@ -5,37 +5,44 @@ package sample.Logic; /**
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 
 public class ThreadHandler extends Thread {
 
     private String[] command;
     public boolean continuous;
     public String returnedData = "";
+    private boolean sudo;
 
-    public ThreadHandler(String[] Command, boolean Continuous){
+    public ThreadHandler(String[] Command, boolean _sudo, boolean _continuous){
         command = Command;
-        continuous = Continuous;
+        continuous = _continuous;
+        sudo = _sudo;
+
     }
 
-    public void run(){
+    public void run() {
         try {
-            Process proc = Runtime.getRuntime().exec(command);
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            processBuilder.redirectErrorStream(true);
 
-            // Read the output
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-
+            Process process = processBuilder.start();
             String line;
-            while ((line = reader.readLine()) != null) {
-                if (continuous){
-                    System.out.print(line +" \n");
-                }else {
-                    returnedData += line + "\n";
-                }
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    process.getInputStream()));
+            if (sudo) {
+                process.waitFor();
+                return;
+            } else if (!continuous) {
+                returnedData = in.readLine();
+                process.destroy();
             }
-        }catch (IOException e){
+
+
+            process.destroy();
+        }catch (Exception e){
             e.printStackTrace();
         }
-
     }
+
 }

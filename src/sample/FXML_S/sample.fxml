@@ -68,7 +68,7 @@
         </AnchorPane>
     </left>
     <bottom>
-        <TitledPane animated="true" maxHeight="65.0" minHeight="65.0" text="ROS Commands" BorderPane.alignment="CENTER">
+        <TitledPane animated="true" expanded="false" maxHeight="65.0" minHeight="65.0" text="ROS Commands" BorderPane.alignment="CENTER">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="1200.0" prefHeight="200.0">
                     <children>
@@ -236,15 +236,33 @@
                                        <Insets left="5.0" />
                                     </VBox.margin>
                                  </Label>
-                                 <ProgressIndicator fx:id="TestingProgressIndicator" progress="0.0">
-                                    <VBox.margin>
-                                       <Insets top="150.0" />
-                                    </VBox.margin>
-                                 </ProgressIndicator>
-
+                                 <Line endX="650.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
+                                            <Region prefHeight="120.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                 <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
+                                    <children>
+                                       <VBox prefHeight="50.0" prefWidth="50.0">
+                                          <children>
+      
+                                             <ProgressIndicator fx:id="TestingProgressIndicator" progress="0.0" />
+                                          </children>
+                                       </VBox>
+                                    </children>
+                                 </HBox>
+                                 <HBox fillHeight="false" prefHeight="5.0" prefWidth="200.0">
+                                    <children>
+                                       <Label fx:id="TestsStatusTest" alignment="BOTTOM_LEFT" text="Label">
+                                          <HBox.margin>
+                                             <Insets left="5.0" top="5.0" />
+                                          </HBox.margin>
+                                       </Label>
+                                        <Region prefHeight="1.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                       <Button fx:id="TestsStartTest" alignment="BOTTOM_RIGHT" mnemonicParsing="false" onAction="#StartTest" text="Start Test">
+                                          <HBox.margin>
+                                             <Insets right="5.0" />
+                                          </HBox.margin></Button>
+                                    </children>
+                                 </HBox>
                                         </children>
-
-                                        
                                         </VBox>
                                 </children>
                             </AnchorPane>
@@ -253,7 +271,7 @@
                     </Tab>
                 </tabs>
             </TabPane>
-            <StackPane fx:id="MainStackPane" prefHeight="601.0" prefWidth="1002.0" style="-fx-background-color: #c6c6c6;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER_RIGHT">
+            <StackPane fx:id="MainStackPane" prefHeight="601.0" prefWidth="1002.0" style="-fx-background-color: #c6c6c6;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER_RIGHT">
                 <children>
                     <Text fx:id="mainEnvironmentNotSetupLabel" fill="#6b6969" strokeType="OUTSIDE" strokeWidth="0.0" text="Environment has not been setup.">
                         <StackPane.margin>

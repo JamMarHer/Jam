@@ -40,7 +40,7 @@ public class Main extends Application {
             primaryStage.show();
         }
     }
-
+/*
     private  void startSystem(){
         System.out.println("Initializing roscore...");
         roscoreInit();
@@ -73,7 +73,7 @@ public class Main extends Application {
         System.out.print("done. \nServiceHandler running...");
 
     }
-
+*/
 
 
 }
