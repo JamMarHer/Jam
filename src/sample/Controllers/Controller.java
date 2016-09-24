@@ -23,17 +23,13 @@ import sample.Logic.*;
 import sample.Main;
 import sample.Properties.TestingProgress;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-public class Controller implements Initializable {
+public class Controller implements Initializable, Serializable {
 
     private boolean environmentSetup = false;
 
@@ -58,16 +54,19 @@ public class Controller implements Initializable {
     @FXML private ProgressBar TestingProgressBar = new ProgressBar();
     @FXML private ProgressIndicator TestingProgressIndicator = new ProgressIndicator();
     @FXML private Label TestsStatusTest = new Label();
+    @FXML private Button ButtonTestLoadPreviousSystem = new Button();
+    @FXML private Label TestLoadPreviousSystemLabel = new Label();
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
     final TestingProgress testingProgress = new TestingProgress();
     @FXML private BarChart<String, Number> BarChartII = new BarChart<String, Number>(xAxys,yAxys);
     private ReportInterpretation RI;
     private String projectTestPath;
-    private String projectTestLaunchRun;
+    private File projectTestLaunchRun;
     private TestThread testThreadROS;
     private TestThread testThreadPoject;
     private TestThread testThreadEnvi;
+    private boolean recuperatedTestThreadEnv;
 
 
 
@@ -75,11 +74,30 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         DatabaseOperations databaseOperations = new DatabaseOperations();
 
-        if(!(databaseOperations.retrieveData("extDir").equals("/...") || databaseOperations.retrieveData("extDaikon").equals("/..."))){
+        if(!(databaseOperations.retrieveData("extDir", "settings").equals("/...") || databaseOperations.retrieveData("extDaikon", "settings").equals("/..."))){
             environmentSetup = true;
             mainEnvironmentNotSetupLine.setVisible(false);
             mainEnvironmentNotSetupLabel.setVisible(false);
         }
+        if(!databaseOperations.checkDBPresent("tests")){
+            ButtonTestLoadPreviousSystem.setVisible(false);
+            TestLoadPreviousSystemLabel.setVisible(false);
+        }
+        ButtonTestLoadPreviousSystem.setOnAction(event -> {
+            RequestBox requestBox = new RequestBox("Pick a System", "Select a previous system", false, databaseOperations);
+            TestThread tempTest = null;
+            try {
+                tempTest = requestBox.retrieveTTE();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(tempTest !=null) {
+                recuperatedTestThreadEnv = true;
+            }else {
+                recuperatedTestThreadEnv = false;
+            }
+
+        });
 
         assert settings != null : "fx:id=\"settings\" was not injected: check your FXML file 'sample.fxml'.";
         MenuSettings menuSettings = new MenuSettings();
@@ -141,7 +159,6 @@ public class Controller implements Initializable {
     // Mushroom would verify that the version of ROS being used is unaltered (it would change back to prior projects modifications), this to mimic a real scenario.
 
 
-
     @FXML
     public void testingLocatePath(ActionEvent event){
         Stage stage = Stage.class.cast(Control.class.cast(event.getSource()).getScene().getWindow());
@@ -157,6 +174,7 @@ public class Controller implements Initializable {
     private void chooseFile(Stage stage, String from){
         try {
             DirectoryChooser directoryChooser = new DirectoryChooser();
+            FileChooser fileChooser = new FileChooser();
             if(from.equals("project")) {
                 directoryChooser.setTitle("Project path");
                 File selectedDirectory = directoryChooser.showDialog(stage);
@@ -165,9 +183,9 @@ public class Controller implements Initializable {
 
             }
             if(from.equals("launch_run")) {
-                directoryChooser.setTitle("Launch/Run");
-                File selectedDirectory = directoryChooser.showDialog(stage);
-                projectTestLaunchRun= selectedDirectory.getAbsolutePath();
+                fileChooser.setTitle("Launch/Run");
+                File selectedDirectory = fileChooser.showOpenDialog(stage);
+                projectTestLaunchRun= selectedDirectory.getAbsoluteFile();
                 testing_prokect_edittext_path_launch_run.setText(selectedDirectory.getAbsolutePath());
             }
 
@@ -178,12 +196,18 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    public void StartTest (ActionEvent event){
+    public void StartTest (ActionEvent event) throws InterruptedException {
         if(projectTestPath == null || projectTestLaunchRun == null){
             TestsStatusTest.setText("Project Path || Project Launch/Run not set!");
-        }else {
+        }else if(recuperatedTestThreadEnv){
+            testThreadEnvi.run();
+            testThreadEnvi.join();
+        }else{
             try {
                 System.out.print("IN START TEST");
+                RequestBox successfullrun = new RequestBox("Save System?", "Do you want to save the system if is ran without errors?", true);
+                String tempRequestedSave = successfullrun.requestUser();
+
                 testThreadROS = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ROS");
                 processStatusIndicator("Analyzing ROS", testThreadROS);
                 testThreadROS.run();
@@ -199,7 +223,22 @@ public class Controller implements Initializable {
                         testThreadEnvi.run();
                         testThreadEnvi.join();
                         if(testThreadEnvi.getFinalEnvironmentPassed()){
-                            System.out.print("ALLSET");
+                            if(!tempRequestedSave.equals("NON")){
+                                DatabaseOperations databaseOperations = new DatabaseOperations();
+                                databaseOperations.generateTestsDatabase();
+                                String completeTestName = tempRequestedSave +new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss").format(new Date()).replace("/","_") + ".ser";
+                                databaseOperations.insertData("fileName", completeTestName,"tests");
+                                FileOutputStream fileOutputStream = new FileOutputStream(testThreadEnvi.PROJECTPATH+"/src/sample/SavedTests/"+completeTestName +".ser");
+                                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                                objectOutputStream.writeObject(testThreadEnvi);
+                                objectOutputStream.close();
+                            }
+                            System.out.print("ALLSET");/*
+                            testThreadEnvi.setAllSetSucces(true);
+                            testThreadEnvi.run();
+                            testThreadEnvi.join();
+                            */
+
                         }else {
                             System.out.print("DEAD IN ENV");
                         }
@@ -210,7 +249,7 @@ public class Controller implements Initializable {
                     System.out.print("DEAD IN ROS");
                 }
 
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
