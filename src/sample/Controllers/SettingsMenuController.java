@@ -48,8 +48,8 @@ public class SettingsMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         databaseOperations = new DatabaseOperations();
-        extPath = databaseOperations.retrieveData("extDir", "settings");
-        daikonPath = databaseOperations.retrieveData("extDaikon", "settings");
+        extPath = databaseOperations.retrieveData("extDir",null ,"settings");
+        daikonPath = databaseOperations.retrieveData("extDaikon",null, "settings");
         MenuSettingImplementationPath.setText(extPath);
         MenuSettingDaikonPath.setText(daikonPath);
 

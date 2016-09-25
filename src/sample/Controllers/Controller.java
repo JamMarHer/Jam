@@ -67,14 +67,17 @@ public class Controller implements Initializable, Serializable {
     private TestThread testThreadPoject;
     private TestThread testThreadEnvi;
     private boolean recuperatedTestThreadEnv;
+    private DatabaseOperations databaseOperations;
+    private String[] RunableCommand;
+    private String[] RunableSupportCommand;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        DatabaseOperations databaseOperations = new DatabaseOperations();
+         databaseOperations = new DatabaseOperations();
 
-        if(!(databaseOperations.retrieveData("extDir", "settings").equals("/...") || databaseOperations.retrieveData("extDaikon", "settings").equals("/..."))){
+        if(!(databaseOperations.retrieveData("extDir", null,"settings").equals("/...") || databaseOperations.retrieveData("extDaikon", null, "settings").equals("/..."))){
             environmentSetup = true;
             mainEnvironmentNotSetupLine.setVisible(false);
             mainEnvironmentNotSetupLabel.setVisible(false);
@@ -85,13 +88,14 @@ public class Controller implements Initializable, Serializable {
         }
         ButtonTestLoadPreviousSystem.setOnAction(event -> {
             RequestBox requestBox = new RequestBox("Pick a System", "Select a previous system", false, databaseOperations);
-            TestThread tempTest = null;
+            RunableCommand = new String[]{};
             try {
-                tempTest = requestBox.retrieveTTE();
+                RunableCommand = requestBox.retrieveTTE();
+                RunableSupportCommand = databaseOperations.retrieveData("supportCommand",RunableCommand.toString(),"tests").replace("[","").replace("]","").split(",");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(tempTest !=null) {
+            if(RunableCommand !=null) {
                 recuperatedTestThreadEnv = true;
             }else {
                 recuperatedTestThreadEnv = false;
@@ -200,8 +204,13 @@ public class Controller implements Initializable, Serializable {
         if(projectTestPath == null || projectTestLaunchRun == null){
             TestsStatusTest.setText("Project Path || Project Launch/Run not set!");
         }else if(recuperatedTestThreadEnv){
-            testThreadEnvi.run();
+            testThreadEnvi = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ENV");
+            testThreadEnvi.setRunCommand(RunableCommand);
+            testThreadEnvi.setSupportCommand(RunableSupportCommand);
+            testThreadEnvi.setAllSetSucces(true);
+            testThreadEnvi.start();
             testThreadEnvi.join();
+
         }else{
             try {
                 System.out.print("IN START TEST");
@@ -224,20 +233,13 @@ public class Controller implements Initializable, Serializable {
                         testThreadEnvi.join();
                         if(testThreadEnvi.getFinalEnvironmentPassed()){
                             if(!tempRequestedSave.equals("NON")){
-                                DatabaseOperations databaseOperations = new DatabaseOperations();
                                 databaseOperations.generateTestsDatabase();
-                                String completeTestName = tempRequestedSave +new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss").format(new Date()).replace("/","_") + ".ser";
+                                String completeTestName = tempRequestedSave +new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss").format(new Date()).replace("/","_");
                                 databaseOperations.insertData("fileName", completeTestName,"tests");
-                                FileOutputStream fileOutputStream = new FileOutputStream(testThreadEnvi.PROJECTPATH+"/src/sample/SavedTests/"+completeTestName +".ser");
-                                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                                objectOutputStream.writeObject(testThreadEnvi);
-                                objectOutputStream.close();
+                                databaseOperations.insertData("command", Arrays.toString(testThreadEnvi.getRunCommand()), "tests");
+                                databaseOperations.insertData("supportCommand", Arrays.toString(testThreadEnvi.getSupportCommand()),"tests");
                             }
-                            System.out.print("ALLSET");/*
-                            testThreadEnvi.setAllSetSucces(true);
-                            testThreadEnvi.run();
-                            testThreadEnvi.join();
-                            */
+                            System.out.print("ALLSET");
 
                         }else {
                             System.out.print("DEAD IN ENV");

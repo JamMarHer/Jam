@@ -32,7 +32,7 @@ public class RequestBox  {
     static boolean extraButton;
     static DatabaseOperations databaseOperations;
     String currentSelection = "";
-    TestThread retrieved;
+    String[] retrieved;
 
     public RequestBox(String _title, String _message, boolean _extraButton){
         title = _title;
@@ -90,12 +90,10 @@ public class RequestBox  {
         return returned;
     }
 
-    public TestThread retrieveTTE() throws Exception{
+    public String[] retrieveTTE() throws Exception{
         if(databaseOperations == null){
             throw new Exception("RequestBox has not been initialized with DatabaseOperator");
         }
-
-
 
         Stage window = new Stage();
 
@@ -112,7 +110,7 @@ public class RequestBox  {
 
 
         ListView<String> listView = new ListView<>();
-        ObservableList<String> items = FXCollections.observableArrayList(translateTestsToArray(databaseOperations.retrieveData("testName", "settings")));
+        ObservableList<String> items = FXCollections.observableArrayList(translateTestsToArray(databaseOperations.retrieveData("testName", null,"settings")));
         listView.setItems(items);
         listView.setPrefHeight(500);
         listView.setPrefWidth(320);
@@ -126,10 +124,7 @@ public class RequestBox  {
         apply.setOnAction(event -> {
             if(currentSelection != null){
                 try {
-                    FileInputStream fileInputStream = new FileInputStream(System.getProperty("user.dir") + "/src/sample/SavedTests/"+currentSelection);
-                    ObjectInputStream objectOutputStream = new ObjectInputStream(fileInputStream);
-                    retrieved = (TestThread)objectOutputStream.readObject();
-                    objectOutputStream.close();
+                    retrieved = translateTestsToArray(databaseOperations.retrieveData("command", currentSelection,"tests"));
 
                 } catch (Exception e) {
                     e.printStackTrace();

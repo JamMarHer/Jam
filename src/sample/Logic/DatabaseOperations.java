@@ -58,9 +58,10 @@ public class DatabaseOperations {
             System.out.println("Opened test database successfully");
             stmt = c.createStatement();
             String sql = "CREATE TABLE tests " +
-                    "(ID MEDIUMINT     NOT NULL AUTO_INCREMENT, "+
+                    "(ID INTEGER PRIMARY KEY AUTOINCREMENT, "+
                     "TESTNAME         TEXT, " +
-                    "FILENAME         TEXT"+
+                    "COMMAND         TEXT, "+
+                    "SUPPORTCOMMAND  TEXT"+
                     ")";
             stmt.executeUpdate(sql);
             stmt.close();
@@ -117,8 +118,13 @@ public class DatabaseOperations {
                     stmt.executeUpdate(sql);
                     created = true;
                 }
-                if (option.equals("fileName")) {
-                    String sql = "INSERT INTO tests (ID, FILENAME) VALUES (2, '" + data + "' );";
+                if (option.equals("command")) {
+                    String sql = "INSERT INTO tests (COMMAND) VALUES ('" + data + "' );";
+                    stmt.executeUpdate(sql);
+                    created = true;
+                }
+                if (option.equals("supportCommand")) {
+                    String sql = "INSERT INTO tests (SUPPORTCOMMAND) VALUES ('" + data + "' );";
                     stmt.executeUpdate(sql);
                     created = true;
                 }
@@ -183,7 +189,7 @@ public class DatabaseOperations {
                     System.out.print("updates Ext");
                     updated = true;
                 }
-                if (option.equals("fileName")) {
+                if (option.equals("command")) {
 
                     String sql = "UPDATE tests set FILENAME = '" + data + "' WHERE ID=2;";
                     System.out.print(data + "From DB");
@@ -205,7 +211,7 @@ public class DatabaseOperations {
 
     }
 
-    public String retrieveData(String option, String database){
+    public String retrieveData(String option, String testName, String database){
 
         Connection c = null;
         Statement stmt = null;
@@ -261,9 +267,14 @@ public class DatabaseOperations {
                     rs.close();
                 }
 
-                if (option.equals("fileName")) {
-                    ResultSet rss = stmt2.executeQuery("SELECT * FROM tests WHERE ID=2;");
+                if (option.equals("command")) {
+                    ResultSet rss = stmt2.executeQuery("SELECT * FROM tests WHERE TESTNAME="+testName+";");
                     toReturn = rss.getString("FILENAME");
+                    rss.close();
+                }
+                if (option.equals("supportCommand")) {
+                    ResultSet rss = stmt2.executeQuery("SELECT * FROM tests WHERE COMMAND="+testName+";");
+                    toReturn = rss.getString("SUPPORTCOMMAND");
                     rss.close();
                 }
                 stmt.close();

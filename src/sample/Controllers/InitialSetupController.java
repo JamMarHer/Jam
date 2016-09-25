@@ -52,8 +52,8 @@ public class InitialSetupController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         DatabaseOperations databaseOperations  = new DatabaseOperations();
-        setup_ros_edittext_path.setText(databaseOperations.retrieveData("extDir", "settings"));
-        setup_daikon_edittext_path.setText(databaseOperations.retrieveData("extDaikon", "settings"));
+        setup_ros_edittext_path.setText(databaseOperations.retrieveData("extDir",null, "settings"));
+        setup_daikon_edittext_path.setText(databaseOperations.retrieveData("extDaikon", null, "settings"));
 
         it.setImage(new Image("file:src/sample/images/post_icon.png"));
 

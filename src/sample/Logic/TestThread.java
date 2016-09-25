@@ -28,13 +28,14 @@ public class TestThread extends Thread implements Serializable {
     private File PROJECTTESTLAUNCHROS;
     private boolean allSetSucces;
     private String[] successfullRun;
+    private String[] successfullSupportRun;
 
     public TestThread(ReportInterpretation RI, TestingProgress TP, String projectTestPath, File projectTestLaunchRos, String testType, String _task) {
         task = _task;
         ROSPassed = false;
         testingProgress = TP;
         DatabaseOperations databaseOperations = new DatabaseOperations();
-        ros_implementation = databaseOperations.retrieveData("extDir","settings");
+        ros_implementation = databaseOperations.retrieveData("extDir",null,"settings");
         PROJECTPATH = System.getProperty("user.dir");
         PROJECTTESTPATH = projectTestPath;
         PROJECTTESTLAUNCHROS = projectTestLaunchRos;
@@ -133,6 +134,7 @@ public class TestThread extends Thread implements Serializable {
         if (task.equals("ENV") && !allSetSucces){
             char type = checkScriptLaunch(PROJECTTESTLAUNCHROS.getAbsolutePath());
             String[] tempRun = PROJECTTESTLAUNCHROS.getAbsolutePath().split("/");
+            String[] requestedCommand = new String[]{};
             String preliminarCommand = "";
             if(type == 'x'){
                 System.out.print("Not Supported");
@@ -144,11 +146,11 @@ public class TestThread extends Thread implements Serializable {
                 RequestBox projectName = new RequestBox("Project information required","Please provide ros package (ex. beginner_tutorials)", false);
                 preliminarCommand = "roslaunch "+ projectName.requestUser() +" "+tempRun[tempRun.length-1];
             }
-            String[] setup = {"/bin/bash", "-c", "source "+PROJECTTESTPATH+"/devel/setup.bash && "+ preliminarCommand};
+            String[] setup = new String[]{"/bin/bash", "-c", "source " + PROJECTTESTPATH + "/devel/setup.bash && " + preliminarCommand};
             RequestBox requestBox = new RequestBox("Required commands", "Enter any command the system depends on.", true);
             String tempRequestedCommad = requestBox.requestUser();
             if(!tempRequestedCommad.equals("NON")){
-                String[] requestedCommand = {"/bin/bash", "-c", tempRequestedCommad};
+                requestedCommand = new String[]{"/bin/bash", "-c", tempRequestedCommad};
                 ThreadHandler requestedCommandExe = new ThreadHandler(requestedCommand,false,true);
                 requestedCommandExe.start();
                 try {
@@ -171,16 +173,26 @@ public class TestThread extends Thread implements Serializable {
                     System.out.print("Test ready. Verified by nodes > 1**************");
                     FinalEnvironmentPassed = true;
                     successfullRun = setup;
+                    successfullSupportRun = requestedCommand;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }else if(allSetSucces){
-            ThreadHandler threadHandler = new ThreadHandler(successfullRun, false, true);
-            threadHandler.start();
+            ThreadHandler Command = new ThreadHandler(successfullRun, false, true);
+            if(successfullSupportRun != null){
+                ThreadHandler supportCommand = new ThreadHandler(successfullSupportRun, false, true);
+                supportCommand.start();
+                try {
+                    supportCommand.join(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Command.start();
             System.out.print("Running program");
             try {
-                threadHandler.join();
+                Command.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -191,6 +203,20 @@ public class TestThread extends Thread implements Serializable {
     public void setAllSetSucces(boolean state){
         allSetSucces = state;
     }
+
+    public void setRunCommand(String[] command){
+        successfullRun = command;
+    }
+    public void setSupportCommand(String[] command){
+        successfullSupportRun = command;
+    }
+    public String[] getRunCommand(){
+        return successfullRun;
+    }
+    public String[] getSupportCommand(){
+        return  successfullSupportRun;
+    }
+
 
     private char checkScriptLaunch(String projectlaunchROS){
         String[] temp  = projectlaunchROS.split("\\.");
