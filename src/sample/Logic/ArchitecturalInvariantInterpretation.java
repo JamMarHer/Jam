@@ -5,6 +5,7 @@ import sample.Interfaces.ReportInterpretation;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,7 +21,7 @@ import java.util.HashMap;
     // :::: = max | 4
     // ::: = minMax | 3
 
-public class ArchitecturalInvariantInterpretation implements ReportInterpretation {
+public class ArchitecturalInvariantInterpretation implements ReportInterpretation, Serializable {
 
     private ArrayList<String> generalArrayInput;
     // 1) HashMap::: String:: recording node;
@@ -69,10 +70,6 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
         String currentNode = "";
         String currentState = "";
         String currentTopicService = "";
-        ArrayList<String> tempMin;
-        ArrayList<String> tempMax;
-        ArrayList<String> tempMinMax;
-        int k =0;
         for(String line : generalArrayInput){
             if(line.split(" ")[0].equals("::::::::::::::::::")){
                 currentNode = line.split(" ")[1];
@@ -87,16 +84,13 @@ public class ArchitecturalInvariantInterpretation implements ReportInterpretatio
                 currentTopicService = line.split(" ")[1];
                 generalMapInput.get(currentNode).get(currentState).put(currentTopicService, new HashMap<>());
             } else if(line.split(" ")[0].equals(":::::")){
-                tempMin = processLineData(line);
-                generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("Min", tempMin);
+                generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("Min", processLineData(line));
             } else if(line.split(" ")[0].equals("::::")){
-                tempMax = processLineData(line);
-                generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("Max", tempMax);
+                generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("Max", processLineData(line));
                 size.get(currentNode).put(currentState, size.get(currentNode).get(currentState) +1);
                 generalSize++;
             } else if(line.split(" ")[0].equals(":::")){
-                tempMinMax = processLineData(line);
-                generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("MinMax", tempMinMax);
+                generalMapInput.get(currentNode).get(currentState).get(currentTopicService).put("MinMax", processLineData(line));
                 size.get(currentNode).put(currentState, size.get(currentNode).get(currentState) +1);
                 generalSize++;
             }

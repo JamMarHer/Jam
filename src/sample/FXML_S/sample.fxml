@@ -53,6 +53,7 @@
                 <Menu mnemonicParsing="false" text="Tests">
                     <items>
                         <MenuItem fx:id="architecturalInvariantTest" mnemonicParsing="false" text="Architectural Invariant Test" />
+                  <MenuItem fx:id="loadPreviousTest" mnemonicParsing="false" text="Load Previous Test" />
                     </items>
                 </Menu>
             </menus>
@@ -236,8 +237,24 @@
                                        <Insets left="5.0" />
                                     </VBox.margin>
                                  </Label>
+                                 <Label fx:id="TestLoadPreviousSystemLabel" text="Mushroom saves successful environment checks. If you have not modified your system it's more convient to load a previous set of threads. Want to load a previous system?" wrapText="true">
+                                    <VBox.margin>
+                                       <Insets left="5.0" top="5.0" />
+                                    </VBox.margin>
+                                    <graphic>
+                                       <HBox prefHeight="25.0" prefWidth="75.0">
+                                          <children>
+                                             <Button fx:id="ButtonTestLoadPreviousSystem" mnemonicParsing="false" text="Load">
+                                                <HBox.margin>
+                                                   <Insets left="7.0" />
+                                                </HBox.margin>
+                                             </Button>
+                                          </children>
+                                       </HBox>
+                                    </graphic>
+                                 </Label>
                                  <Line endX="650.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
-                                            <Region prefHeight="120.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                            <Region prefHeight="80.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
                                     <children>
                                        <VBox prefHeight="50.0" prefWidth="50.0">
@@ -256,7 +273,7 @@
                                           </HBox.margin>
                                        </Label>
                                         <Region prefHeight="1.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                       <Button fx:id="TestsStartTest" alignment="BOTTOM_RIGHT" mnemonicParsing="false" onAction="#StartTest" text="Start Test">
+                                       <Button fx:id="TestsStartTest" alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Start Test">
                                           <HBox.margin>
                                              <Insets right="5.0" />
                                           </HBox.margin></Button>

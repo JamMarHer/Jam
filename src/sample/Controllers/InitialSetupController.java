@@ -52,8 +52,8 @@ public class InitialSetupController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         DatabaseOperations databaseOperations  = new DatabaseOperations();
-        setup_ros_edittext_path.setText(databaseOperations.retrieveData("extDir"));
-        setup_daikon_edittext_path.setText(databaseOperations.retrieveData("extDaikon"));
+        setup_ros_edittext_path.setText(databaseOperations.retrieveData("extDir",null, "settings"));
+        setup_daikon_edittext_path.setText(databaseOperations.retrieveData("extDaikon", null, "settings"));
 
         it.setImage(new Image("file:src/sample/images/post_icon.png"));
 
@@ -124,11 +124,11 @@ public class InitialSetupController implements Initializable {
             }
             if(currentScene == 1){
                 setup_ros_edittext_path.setText(selectedDirectory.getAbsolutePath());
-                databaseOperations.updateData("extDir",selectedDirectory.getAbsolutePath());
+                databaseOperations.updateData("extDir",selectedDirectory.getAbsolutePath(), "settings");
             }
             if(currentScene == 2){
                 setup_daikon_edittext_path.setText(selectedDirectory.getAbsolutePath());
-                databaseOperations.updateData("extDaikon",selectedDirectory.getAbsolutePath());
+                databaseOperations.updateData("extDaikon",selectedDirectory.getAbsolutePath(), "settings");
             }
         }catch (Exception e){
             System.out.print("Path selection canceled");

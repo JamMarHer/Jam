@@ -23,17 +23,14 @@ import sample.Logic.*;
 import sample.Main;
 import sample.Properties.TestingProgress;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
-public class Controller implements Initializable {
+public class Controller implements Initializable, Serializable {
 
     private boolean environmentSetup = false;
 
@@ -42,6 +39,7 @@ public class Controller implements Initializable {
     @FXML private Line mainEnvironmentNotSetupLine = new Line();
     @FXML private Text mainEnvironmentNotSetupLabel = new Text();
     @FXML private MenuItem architecturalInvariantTest = new MenuItem();
+    @FXML private MenuItem loadPreviousTest = new MenuItem();
     @FXML private BorderPane MainPane = new BorderPane();
     @FXML private TabPane MainTesting = new TabPane();
     @FXML private StackPane MainStackPane = new StackPane();
@@ -58,28 +56,55 @@ public class Controller implements Initializable {
     @FXML private ProgressBar TestingProgressBar = new ProgressBar();
     @FXML private ProgressIndicator TestingProgressIndicator = new ProgressIndicator();
     @FXML private Label TestsStatusTest = new Label();
+    @FXML private Button ButtonTestLoadPreviousSystem = new Button();
+    @FXML private Label TestLoadPreviousSystemLabel = new Label();
+    @FXML private Button TestsStartTest = new Button();
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
     final TestingProgress testingProgress = new TestingProgress();
     @FXML private BarChart<String, Number> BarChartII = new BarChart<String, Number>(xAxys,yAxys);
     private ReportInterpretation RI;
     private String projectTestPath;
-    private String projectTestLaunchRun;
+    private File projectTestLaunchRun;
     private TestThread testThreadROS;
     private TestThread testThreadPoject;
     private TestThread testThreadEnvi;
-
+    private boolean recuperatedTestThreadEnv;
+    private DatabaseOperations databaseOperations;
+    private String[] RunableCommand;
+    private String[] RunableSupportCommand;
+    private String testName;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        DatabaseOperations databaseOperations = new DatabaseOperations();
+        databaseOperations = new DatabaseOperations();
 
-        if(!(databaseOperations.retrieveData("extDir").equals("/...") || databaseOperations.retrieveData("extDaikon").equals("/..."))){
+        TestsStatusTest.setText("...");
+        try {
+            testThreadEnvi = new TestThread(null,null,null,null,null,null,null); // to obtain PAth
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        if(!(databaseOperations.retrieveData("extDir", null,"settings").equals("/...") || databaseOperations.retrieveData("extDaikon", null, "settings").equals("/..."))) {
             environmentSetup = true;
             mainEnvironmentNotSetupLine.setVisible(false);
             mainEnvironmentNotSetupLabel.setVisible(false);
         }
+
+        if(!databaseOperations.checkDBPresent("tests")){
+            ButtonTestLoadPreviousSystem.setVisible(false);
+            TestLoadPreviousSystemLabel.setVisible(false);
+        }
+        ButtonTestLoadPreviousSystem.setOnAction(event -> loadPreviousTest());
+
+        loadPreviousTest.setOnAction(event -> loadPreviousTest());
+
+
 
         assert settings != null : "fx:id=\"settings\" was not injected: check your FXML file 'sample.fxml'.";
         MenuSettings menuSettings = new MenuSettings();
@@ -99,6 +124,57 @@ public class Controller implements Initializable {
                 initializeTest((ArchitecturalInvariantInterpretation)RI);
             }
         });
+
+        TestsStartTest.setOnAction(event -> {
+            try {
+                StartTest();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
+    private void loadPreviousTest(){
+        databaseOperations = new DatabaseOperations();
+        RequestBox requestBox = new RequestBox("Pick a System", "Select a previous system", false, databaseOperations);
+        RunableCommand = new String[]{};
+        try {
+            RunableCommand = requestBox.retrieveTTE();
+            databaseOperations = new DatabaseOperations();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(RunableCommand !=null) {
+            recuperatedTestThreadEnv = true;
+            testing_prokect_edittext_path_launch_run.setText("ALL SET");
+            testing_prokect_edittext_path_launch_run.setEditable(false);
+            testing_prokect_edittext_path.setText("ALL SET");
+            testing_prokect_edittext_path.setEditable(false);
+            RunableSupportCommand = requestBox.supportCommand;
+            testName = requestBox.testName;
+
+            RequestBox requestBox2 = new RequestBox("Previous post-daikon report", "There is an available post-daikon report. Do you want to use it?");
+            if(requestBox2.requestPass()){
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(testThreadEnvi.PROJECTPATH + "/src/sample/SavedTests/" + testName+ ".ser");
+                    System.out.println(testThreadEnvi.PROJECTPATH + "/src/sample/SavedTests/" + testName+ ".ser");
+                    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                    RI = (ArchitecturalInvariantInterpretation) objectInputStream.readObject();
+
+                    objectInputStream.close();
+                    initializeTest((ArchitecturalInvariantInterpretation)RI);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }else {
+            recuperatedTestThreadEnv = false;
+        }
+
+
+
     }
 
     public void initializeTest(ArchitecturalInvariantInterpretation AII){
@@ -137,9 +213,6 @@ public class Controller implements Initializable {
 
 
     }
-    // Tests can take a long time and it is recommended to not work on ros projects while in execution. This can cause problems.
-    // Mushroom would verify that the version of ROS being used is unaltered (it would change back to prior projects modifications), this to mimic a real scenario.
-
 
 
     @FXML
@@ -157,6 +230,7 @@ public class Controller implements Initializable {
     private void chooseFile(Stage stage, String from){
         try {
             DirectoryChooser directoryChooser = new DirectoryChooser();
+            FileChooser fileChooser = new FileChooser();
             if(from.equals("project")) {
                 directoryChooser.setTitle("Project path");
                 File selectedDirectory = directoryChooser.showDialog(stage);
@@ -165,9 +239,9 @@ public class Controller implements Initializable {
 
             }
             if(from.equals("launch_run")) {
-                directoryChooser.setTitle("Launch/Run");
-                File selectedDirectory = directoryChooser.showDialog(stage);
-                projectTestLaunchRun= selectedDirectory.getAbsolutePath();
+                fileChooser.setTitle("Launch/Run");
+                File selectedDirectory = fileChooser.showOpenDialog(stage);
+                projectTestLaunchRun= selectedDirectory.getAbsoluteFile();
                 testing_prokect_edittext_path_launch_run.setText(selectedDirectory.getAbsolutePath());
             }
 
@@ -177,29 +251,60 @@ public class Controller implements Initializable {
         }
     }
 
-    @FXML
-    public void StartTest (ActionEvent event){
-        if(projectTestPath == null || projectTestLaunchRun == null){
+    public void StartTest () throws InterruptedException, SQLException, ClassNotFoundException, FileNotFoundException {
+        if(recuperatedTestThreadEnv){
+            System.out.print(testName);
+
+            System.out.print(RI.getID());
+            testThreadEnvi = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ENV",testName);
+            testThreadEnvi.setRunCommand(RunableCommand);
+            testThreadEnvi.setSupportCommand(RunableSupportCommand);
+            TestsStatusTest.setText("All Set");
+            testThreadEnvi.setAllSetSucces(true);
+            testThreadEnvi.start();
+
+
+        }else if(projectTestPath == null || projectTestLaunchRun == null){
             TestsStatusTest.setText("Project Path || Project Launch/Run not set!");
-        }else {
+        }else{
             try {
                 System.out.print("IN START TEST");
-                testThreadROS = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ROS");
+                RequestBox successfullrun = new RequestBox("Save System?", "Do you want to save the system if is ran without errors?", true);
+                String tempRequestedSave = successfullrun.requestUser();
+
+                testThreadROS = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ROS", null);
                 processStatusIndicator("Analyzing ROS", testThreadROS);
                 testThreadROS.run();
                 testThreadROS.join();
                 if(testThreadROS.getROSPassed()) {
-                    testThreadPoject = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "PRO");
+                    testThreadPoject = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "PRO", null);
                     processStatusIndicator("Analizing Project", testThreadPoject);
                     testThreadPoject.run();
                     testThreadPoject.join();
                     if(testThreadPoject.getPathPassed()){
                         processStatusIndicator("Analyzing Environment", testThreadEnvi);
-                        testThreadEnvi = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ENV");
+                        testThreadEnvi = new TestThread(RI, testingProgress, projectTestPath, projectTestLaunchRun, "AII", "ENV", tempRequestedSave);
                         testThreadEnvi.run();
                         testThreadEnvi.join();
                         if(testThreadEnvi.getFinalEnvironmentPassed()){
+                            if(!tempRequestedSave.equals("NON")){
+                                if(!databaseOperations.checkDBPresent("tests")){ // We assume that
+                                    databaseOperations.generateTestsDatabase();
+                                }
+                                databaseOperations.insertData("Full", testThreadEnvi.testName,Arrays.toString(testThreadEnvi.getRunCommand()),Arrays.toString(testThreadEnvi.getSupportCommand()));
+                                if(RI != null) {
+                                    FileOutputStream outputStream = new FileOutputStream(testThreadEnvi.PROJECTPATH + "/src/sample/SavedTests/" + testThreadEnvi.testName + ".ser");
+                                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                                    objectOutputStream.writeObject(RI);
+                                    objectOutputStream.close();
+                                }
+
+                                if(testThreadEnvi.startTest()){
+                                    System.out.print("SUCCCEESSS");
+                                }
+                            }
                             System.out.print("ALLSET");
+
                         }else {
                             System.out.print("DEAD IN ENV");
                         }
@@ -210,7 +315,7 @@ public class Controller implements Initializable {
                     System.out.print("DEAD IN ROS");
                 }
 
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

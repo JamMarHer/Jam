@@ -2,10 +2,8 @@ package sample.Logic; /**
  * Created by jam on 8/24/16.
  */
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
+import java.io.*;
+import java.util.ArrayList;
 
 public class ThreadHandler extends Thread {
 
@@ -13,11 +11,15 @@ public class ThreadHandler extends Thread {
     public boolean continuous;
     public String returnedData = "";
     private boolean sudo;
+    public ArrayList<String> returnedContinouesArray;
+    private BufferedWriter out;
+
 
     public ThreadHandler(String[] Command, boolean _sudo, boolean _continuous){
         command = Command;
         continuous = _continuous;
         sudo = _sudo;
+        returnedContinouesArray = new ArrayList<>();
 
     }
 
@@ -28,14 +30,22 @@ public class ThreadHandler extends Thread {
 
             Process process = processBuilder.start();
             String line;
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    process.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
             if (sudo) {
                 process.waitFor();
                 return;
             } else if (!continuous) {
                 returnedData = in.readLine();
                 process.destroy();
+            }else {
+                while ((line = in.readLine()) != null && continuous) {
+                    System.out.println(line);
+                    returnedContinouesArray.add(line);
+                    if(Thread.currentThread().isInterrupted()){
+                        break;
+                    }
+                }
             }
 
 
@@ -43,6 +53,15 @@ public class ThreadHandler extends Thread {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void communicate(String command) throws IOException {
+        out.write(command);
+    }
+
+    public void setContinuous(boolean state){
+        continuous = state;
+
     }
 
 }

@@ -48,8 +48,9 @@ public class SettingsMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         databaseOperations = new DatabaseOperations();
-        extPath = databaseOperations.retrieveData("extDir");
-        daikonPath = databaseOperations.retrieveData("extDaikon");
+        extPath = databaseOperations.retrieveData("extDir", null, "settings");
+        daikonPath = databaseOperations.retrieveData("extDaikon", null, "settings");
+
         MenuSettingImplementationPath.setText(extPath);
         MenuSettingDaikonPath.setText(daikonPath);
 
@@ -105,8 +106,8 @@ public class SettingsMenuController implements Initializable {
 
     @FXML
     private void MenuSettingImplementationApply (ActionEvent event){
-        if(tempScene == 0){ databaseOperations.updateData("extDir", extPath);}
-        if(tempScene == 1){ databaseOperations.updateData("extDaikon", extPath);}
+        if(tempScene == 0){ databaseOperations.updateData("extDir", extPath, "settings");}
+        if(tempScene == 1){ databaseOperations.updateData("extDaikon", extPath, "settings");}
         System.out.println("updating " + tempScene +" " + extPath);
     }
 

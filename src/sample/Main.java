@@ -24,10 +24,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         databaseOperations = new DatabaseOperations();
-        if(!databaseOperations.checkDBPresent()){
+        if(!databaseOperations.checkDBPresent("settings")){
             databaseOperations.generateDatabase();
-            databaseOperations.insertData("extDir", "/...");
-            databaseOperations.insertData("extDaikon", "/...");
+            databaseOperations.insertData("extDir", "/...", "settings");
+            databaseOperations.insertData("extDaikon", "/...", "settings");
             InitialSetup initialSetup = new InitialSetup();
             initialSetup.display();
         }else {
