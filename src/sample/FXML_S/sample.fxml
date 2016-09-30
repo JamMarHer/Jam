@@ -53,6 +53,7 @@
                 <Menu mnemonicParsing="false" text="Tests">
                     <items>
                         <MenuItem fx:id="architecturalInvariantTest" mnemonicParsing="false" text="Architectural Invariant Test" />
+                  <MenuItem fx:id="loadPreviousTest" mnemonicParsing="false" text="Load Previous Test" />
                     </items>
                 </Menu>
             </menus>
@@ -272,7 +273,7 @@
                                           </HBox.margin>
                                        </Label>
                                         <Region prefHeight="1.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                       <Button fx:id="TestsStartTest" alignment="BOTTOM_RIGHT" mnemonicParsing="false" onAction="#StartTest" text="Start Test">
+                                       <Button fx:id="TestsStartTest" alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Start Test">
                                           <HBox.margin>
                                              <Insets right="5.0" />
                                           </HBox.margin></Button>
@@ -287,7 +288,7 @@
                     </Tab>
                 </tabs>
             </TabPane>
-            <StackPane fx:id="MainStackPane" prefHeight="601.0" prefWidth="1002.0" style="-fx-background-color: #c6c6c6;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER_RIGHT">
+            <StackPane fx:id="MainStackPane" prefHeight="601.0" prefWidth="1002.0" style="-fx-background-color: #c6c6c6;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER_RIGHT">
                 <children>
                     <Text fx:id="mainEnvironmentNotSetupLabel" fill="#6b6969" strokeType="OUTSIDE" strokeWidth="0.0" text="Environment has not been setup.">
                         <StackPane.margin>

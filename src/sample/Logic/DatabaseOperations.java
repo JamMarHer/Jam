@@ -1,14 +1,18 @@
 package sample.Logic;
 
+import org.sqlite.SQLiteJDBCLoader;
+
+import javax.xml.transform.Result;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+
 
 /**
  * Created by jam on 9/1/16.
  */
 public class DatabaseOperations {
-
+//TODO Look into PreparedStatement
 
     public DatabaseOperations(){
 
@@ -113,8 +117,8 @@ public class DatabaseOperations {
                 System.out.println("Opened database successfully");
 
                 stmt = c.createStatement();
-                if (option.equals("testName")) {
-                    String sql = "INSERT INTO tests (TESTNAME) VALUES ('" + data + "' );";
+                if (option.equals("test")) {
+                    String sql = "INSERT INTO tests (TESTNAME, COMMAND, SUPPORTCOMMAND) VALUES ('" + data + "' );";
                     stmt.executeUpdate(sql);
                     created = true;
                 }
@@ -137,6 +141,36 @@ public class DatabaseOperations {
                 System.exit(0);
             }
         }
+        return created;
+    }
+
+
+    public boolean insertData(String option, String TestName, String Command, String SupportCommand) throws ClassNotFoundException, SQLException {
+        boolean created = false;
+        Connection c = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:tests.db");
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = c.createStatement();
+            if (option.equals("Full")) {
+                String sql = "INSERT INTO tests (TESTNAME, COMMAND, SUPPORTCOMMAND) VALUES ('" + TestName + "', '" + Command + "', '" + SupportCommand + "');";
+                stmt.executeUpdate(sql);
+                created = true;
+            }
+
+            stmt.close();
+            c.commit();
+            c.close();
+        } catch (Exception e) {
+            System.out.println(e.getClass().getName() + ": insertData " + e.getMessage());
+            System.exit(0);
+        }
+
         return created;
     }
 
@@ -190,7 +224,6 @@ public class DatabaseOperations {
                     updated = true;
                 }
                 if (option.equals("command")) {
-
                     String sql = "UPDATE tests set FILENAME = '" + data + "' WHERE ID=2;";
                     System.out.print(data + "From DB");
                     statement.executeUpdate(sql);
@@ -216,6 +249,7 @@ public class DatabaseOperations {
         Connection c = null;
         Statement stmt = null;
         Statement stmt2 = null;
+        Statement stmt3 = null;
         String toReturn =  "null";
         if(database.equals("settings")) {
             try {
@@ -227,15 +261,11 @@ public class DatabaseOperations {
                 stmt = c.createStatement();
                 stmt2 = c.createStatement();
 
-                //while ( rs.next() ) {
-                //    String extDir = rs.getString("EXT_DIR");
-                //}
                 if (option.equals("extDir")) {
                     ResultSet rs = stmt.executeQuery("SELECT * FROM settings WHERE ID=1;");
                     toReturn = rs.getString("EXT_DIR");
                     rs.close();
                 }
-
                 if (option.equals("extDaikon")) {
                     ResultSet rss = stmt2.executeQuery("SELECT * FROM settings WHERE ID=2;");
                     toReturn = rss.getString("DAIKON_DIR");
@@ -245,13 +275,13 @@ public class DatabaseOperations {
                 stmt.close();
                 c.close();
             } catch (Exception e) {
-
                 System.err.println(e.getClass().getName() + ": retrieveData " + e.getMessage());
                 System.exit(0);
             }
         }
         if(database.equals("tests")){
             try {
+
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection("jdbc:sqlite:tests.db");
                 c.setAutoCommit(false);
@@ -259,29 +289,39 @@ public class DatabaseOperations {
 
                 stmt = c.createStatement();
                 stmt2 = c.createStatement();
+                stmt3 = c.createStatement();
 
                 if (option.equals("testName")) {
-                    ResultSet rs = stmt.executeQuery("SELECT * FROM tests;");
-                    toReturn = rs.getArray("TESTNAME").toString();//TODO Generate a better solution for the complete return of tests
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    Statement stmtx = c.createStatement();
+                    ResultSet resultSet = stmtx.executeQuery("SELECT * FROM tests;");
+                    while(resultSet.next()){
+                        if(resultSet.getString("TESTNAME") != null){
+                            arrayList.add(resultSet.getString("TESTNAME"));
+                        }
 
-                    rs.close();
+                    }
+
+                    return arrayList.toString();
                 }
 
                 if (option.equals("command")) {
-                    ResultSet rss = stmt2.executeQuery("SELECT * FROM tests WHERE TESTNAME="+testName+";");
-                    toReturn = rss.getString("FILENAME");
+                    ResultSet rss = stmt2.executeQuery("SELECT * FROM tests WHERE TESTNAME = '"+testName+"';");
+
+                    System.out.print(rss.getString("COMMAND"));
+                    toReturn = rss.getString("COMMAND");
                     rss.close();
                 }
                 if (option.equals("supportCommand")) {
-                    ResultSet rss = stmt2.executeQuery("SELECT * FROM tests WHERE COMMAND="+testName+";");
-                    toReturn = rss.getString("SUPPORTCOMMAND");
-                    rss.close();
+                    ResultSet rsss = stmt3.executeQuery("SELECT * FROM tests WHERE TESTNAME = '"+testName+"';");
+                    System.out.print(rsss.getString("SUPPORTCOMMAND"));
+                    toReturn = rsss.getString("SUPPORTCOMMAND");
+                    rsss.close();
                 }
                 stmt.close();
                 c.close();
             } catch (Exception e) {
                 System.err.println(e.getClass().getName() + ": retrieveData " + e.getMessage());
-                System.exit(0);
             }
         }
         System.out.println("Operation done successfully returning " + toReturn);

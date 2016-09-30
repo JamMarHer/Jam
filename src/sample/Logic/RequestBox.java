@@ -33,6 +33,14 @@ public class RequestBox  {
     static DatabaseOperations databaseOperations;
     String currentSelection = "";
     String[] retrieved;
+    public String[] supportCommand;
+    public String testName;
+    boolean accept = false;
+
+    public RequestBox(String _title, String _message){
+        title = _title;
+        message = _message;
+    }
 
     public RequestBox(String _title, String _message, boolean _extraButton){
         title = _title;
@@ -44,6 +52,41 @@ public class RequestBox  {
         message = _message;
         extraButton = _extraButton;
         databaseOperations = _databaseOperations;
+    }
+
+    public boolean requestPass(){
+        Stage window = new Stage();
+
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(title);
+        window.setResizable(false);
+        window.setMinWidth(350);
+        Label Message = new Label(message);
+
+
+        Button apply = new Button("Load");
+        Button skip = new Button("Skip");
+
+        apply.setOnAction(event -> {
+            accept = true;
+            window.close();
+        });
+        skip.setOnAction(event -> {
+            accept = false;
+            window.close();
+        });
+
+        VBox vBox = new VBox(10);
+        HBox hBox = new HBox(10);
+        hBox.getChildren().addAll(apply,skip);
+        vBox.getChildren().addAll(Message, hBox);
+
+        vBox.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(vBox);
+
+        window.setScene(scene);
+        window.showAndWait();
+        return accept;
     }
 
     public String requestUser(){
@@ -108,9 +151,9 @@ public class RequestBox  {
 
         Button apply = new Button("Apply");
 
-
         ListView<String> listView = new ListView<>();
-        ObservableList<String> items = FXCollections.observableArrayList(translateTestsToArray(databaseOperations.retrieveData("testName", null,"settings")));
+
+        ObservableList<String> items = FXCollections.observableArrayList(translateTestsToArray(databaseOperations.retrieveData("testName", null,"tests")));
         listView.setItems(items);
         listView.setPrefHeight(500);
         listView.setPrefWidth(320);
@@ -118,13 +161,15 @@ public class RequestBox  {
                 new ChangeListener<String>() {
                     public void changed(ObservableValue<? extends String> ov,
                                         String old_val, String new_val) {
-                        currentSelection  = new_val;
+                        currentSelection  = new_val.replace(" ", "");
                     }
                 });
         apply.setOnAction(event -> {
             if(currentSelection != null){
                 try {
                     retrieved = translateTestsToArray(databaseOperations.retrieveData("command", currentSelection,"tests"));
+                    supportCommand = translateTestsToArray(databaseOperations.retrieveData("supportCommand", currentSelection, "tests"));
+                    testName = currentSelection;
 
                 } catch (Exception e) {
                     e.printStackTrace();

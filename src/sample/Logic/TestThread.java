@@ -2,13 +2,12 @@ package sample.Logic;
 
 import sample.Interfaces.ReportInterpretation;
 import sample.Properties.TestingProgress;
+import sun.awt.image.DataBufferNative;
 
 import java.io.*;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by jam on 9/21/16.
@@ -29,8 +28,12 @@ public class TestThread extends Thread implements Serializable {
     private boolean allSetSucces;
     private String[] successfullRun;
     private String[] successfullSupportRun;
+    public String testName;
+    private String tempTestName;
+    private ReportInterpretation report;
+    private String testType;
 
-    public TestThread(ReportInterpretation RI, TestingProgress TP, String projectTestPath, File projectTestLaunchRos, String testType, String _task) {
+    public TestThread(ReportInterpretation RI, TestingProgress TP, String projectTestPath, File projectTestLaunchRos, String _testType, String _task, String _temptestName) throws SQLException, ClassNotFoundException {
         task = _task;
         ROSPassed = false;
         testingProgress = TP;
@@ -40,6 +43,9 @@ public class TestThread extends Thread implements Serializable {
         PROJECTTESTPATH = projectTestPath;
         PROJECTTESTLAUNCHROS = projectTestLaunchRos;
         allSetSucces =false;
+        tempTestName = _temptestName;
+        report = RI;
+        testType = _testType;
 
     }
 
@@ -171,6 +177,7 @@ public class TestThread extends Thread implements Serializable {
                 threadHandler1.join();
                 if(threadHandler1.returnedContinouesArray.size() >1){
                     System.out.print("Test ready. Verified by nodes > 1**************");
+                    testName= tempTestName +new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss").format(new Date()).replace("/","_");
                     FinalEnvironmentPassed = true;
                     successfullRun = setup;
                     successfullSupportRun = requestedCommand;
@@ -180,7 +187,13 @@ public class TestThread extends Thread implements Serializable {
             }
         }else if(allSetSucces){
             ThreadHandler Command = new ThreadHandler(successfullRun, false, true);
-            if(successfullSupportRun != null){
+            for (int i = 0; i<successfullRun.length; i++){
+                System.out.println( "========="+successfullRun[i]);
+            }
+            successfullRun[1] = "-c";
+
+            if(successfullSupportRun.length >= 3){
+                successfullSupportRun[1] = "-c";
                 ThreadHandler supportCommand = new ThreadHandler(successfullSupportRun, false, true);
                 supportCommand.start();
                 try {
@@ -190,16 +203,84 @@ public class TestThread extends Thread implements Serializable {
                 }
             }
             Command.start();
-            System.out.print("Running program");
             try {
-                Command.join();
+                Command.join(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.out.print("Running program");
+            startTest();
+
         }
 
     }
 
+    public boolean startTest(){
+        HashMap<String, Integer> record = new HashMap<>();
+        HashMap<String, String> pubsubser = new HashMap<>();
+        pubsubser.put("/rec/arch_pub", "PUBLISHER");
+        pubsubser.put("/rec/arch_srvs", "SERVICE");
+        pubsubser.put("/rec/arch_sub", "SUBSCRIBER");
+        try {
+            DatabaseOperations databaseOperations = new DatabaseOperations();
+            String daikonExtension = databaseOperations.retrieveData("extDir", null, "settings");
+
+            String[] initialize = {"/bin/bash", "-c", "source "+daikonExtension+"/catkin_ws/devel/setup.bash && rosrun recorder ArchitecturalTestServer.py"};
+            ThreadHandler initializeATS = new ThreadHandler(initialize, false,true);
+            initializeATS.start();
+            initializeATS.join(1000);
+            System.out.print("Starting Test...");
+            if(testType.equals("AII")){
+                System.out.println(" [AII]");
+                ArchitecturalInvariantInterpretation AIIReport = (ArchitecturalInvariantInterpretation)report;
+                HashMap<String, HashMap<String,HashMap<String, HashMap<String, ArrayList<String>>>>> generalMap = AIIReport.getGeneralMapFilterData();
+                for( String recordingNode : generalMap.keySet()){
+                    //System.out.println("In: " + recordingNode);
+                    for( String state : generalMap.get(recordingNode).keySet()){
+                        //System.out.println("In: " + state);
+                        for( String topic_serivce : generalMap.get(recordingNode).get(state).keySet()){
+                            //System.out.println("In: " + topic_serivce);
+                            for( String min_max_minmax : generalMap.get(recordingNode).get(state).get(topic_serivce).keySet()){
+                                //System.out.println("In: " + min_max_minmax);
+                                if( generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).get(0).equals("null"))
+                                    continue;
+                                System.out.println("DeAttaching "+ recordingNode+ "::::"+ state +":::"+ topic_serivce+"::"+
+                                        min_max_minmax+":"+Arrays.toString(generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).toArray()));
+                                for(String node : generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax)){
+                                    //System.out.println("Trying: " + pubsubser.get(recordingNode) + ", With: "+node+  ", And: "+topic_serivce);
+                                    String[] command = {"/bin/bash", "-c", "source "+daikonExtension+"/catkin_ws/devel/setup.bash && rosservice call /deAttacher \"task: '"+pubsubser.get(recordingNode)+"'\n" +
+                                            "nodeRequest: '"+node+"'\n" +
+                                            "topic_serviceRequest: '"+topic_serivce+"'\""};
+                                    ThreadHandler runK  = new ThreadHandler(command, false, true);
+                                    runK.start();
+                                    runK.join(1500);
+                                    if(runK.returnedContinouesArray.get(0).equals("response: SUCCESS")){
+                                        //System.out.print("SUCCESS");
+                                        if(record.containsKey(pubsubser.get(recordingNode))){
+                                            record.put(pubsubser.get(recordingNode), record.get(pubsubser.get(recordingNode))+1);
+                                        }else {
+                                            record.put(pubsubser.get(recordingNode), 1);
+                                        }
+
+                                        runK.setContinuous(false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }catch (InputProcessingException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(record);
+        return true;
+    }
+
+    //rosservice call /deAttacher "nodeRequest: '/gazebo' \n topicRequest: '/erlecopter/imu'"
     public void setAllSetSucces(boolean state){
         allSetSucces = state;
     }
