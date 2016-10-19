@@ -32,17 +32,18 @@ public class ThreadHandler extends Thread {
             String line;
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-            if (sudo) {
+            if (sudo) { //TODO Check logic
                 process.waitFor();
                 return;
             } else if (!continuous) {
                 returnedData = in.readLine();
                 process.destroy();
             }else {
+
                 while ((line = in.readLine()) != null && continuous) {
                     System.out.println(line);
                     returnedContinouesArray.add(line);
-                    if(Thread.currentThread().isInterrupted()){
+                    if (Thread.currentThread().isInterrupted()) {
                         break;
                     }
                 }

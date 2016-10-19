@@ -66,17 +66,18 @@ public class TestThread extends Thread implements Serializable {
             testingProgress.setStateString("Testing ROS Environment");
             String[] command = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSTCPROSPPATH + " " + "VERSE NON_SUDO"};
             String[] directCommand = {"/bin/bash", "-c", "gksudo cp " + PROJECTPATH + "/src/sample/ROSFiles/tcpros_service.py "+ROSTCPROSPPATH + " && cp "+PROJECTPATH +"/src/sample/ROSFilesMod/node_handle.h "+ ROSNODEHANDLECPATH};
-            String[] command3 = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSTCPROSPPATH + " " + "VERSE NON_SUDO"};
-
+            String[] command3 ={"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSTCPROSPPATH + " " + "VERSE NON_SUDO"};
+            System.out.print(Arrays.toString(command3));
             ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state
             ThreadHandler threadHandler1 = new ThreadHandler(directCommand, true, false);
-            ThreadHandler threadHandler2 = new ThreadHandler(command3,false,false);
+            ThreadHandler threadHandler2 = new ThreadHandler(command3, false, false);
             threadHandler.start();
             try {
                 threadHandler.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
             if (threadHandler.returnedData.equals("NON_MOD_ROS")) {
                 ROSPassed = true;
                 System.out.print("Success by NON_MOD_ROS");
@@ -160,8 +161,7 @@ public class TestThread extends Thread implements Serializable {
                 ThreadHandler requestedCommandExe = new ThreadHandler(requestedCommand,false,true);
                 requestedCommandExe.start();
                 try {
-                    requestedCommandExe.join(10000); // time allowed for requested command to finalize meant to be changed by user
-                    //requestedCommandExe.communicate("");
+                    requestedCommandExe.join(10000); // TODO time allowed for requested command to finalize meant to be changed by user
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -255,7 +255,6 @@ public class TestThread extends Thread implements Serializable {
                                     runK.start();
                                     runK.join(1500);
                                     if(runK.returnedContinouesArray.get(0).equals("response: SUCCESS")){
-                                        //System.out.print("SUCCESS");
                                         if(record.containsKey(pubsubser.get(recordingNode))){
                                             record.put(pubsubser.get(recordingNode), record.get(pubsubser.get(recordingNode))+1);
                                         }else {
@@ -280,7 +279,6 @@ public class TestThread extends Thread implements Serializable {
         return true;
     }
 
-    //rosservice call /deAttacher "nodeRequest: '/gazebo' \n topicRequest: '/erlecopter/imu'"
     public void setAllSetSucces(boolean state){
         allSetSucces = state;
     }

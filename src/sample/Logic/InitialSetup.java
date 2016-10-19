@@ -15,9 +15,6 @@ import java.io.IOException;
 public class InitialSetup {
 
 
-
-    public boolean clicked = false;
-
     public  void display() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/setup.fxml"));
         Stage window = new Stage();
@@ -27,7 +24,6 @@ public class InitialSetup {
         window.setScene(scene);
         window.setResizable(false);
         window.show();
-        // layout.setCenter(addGrid());
 
     }
 }

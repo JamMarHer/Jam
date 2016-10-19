@@ -147,7 +147,6 @@ public class RequestBox  {
         window.setWidth(700);
         Label Message = new Label(message);
 
-        TextField textField = new TextField();
 
         Button apply = new Button("Apply");
 
