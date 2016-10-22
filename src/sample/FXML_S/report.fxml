@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="739.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <VBox prefHeight="800.0" prefWidth="780.0">
+         <children>
+            <Label fx:id="reportTestName" text="Label">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin></Label>
+            <Label fx:id="reportTestTime" text="Label">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Label>
+            <Line endX="780.0" stroke="#9e7171" strokeWidth="2.0" />
+            <VBox prefHeight="100.0" prefWidth="100.0">
+               <children>
+                  <Label maxHeight="60.0" text="The following section of the reports, displays the outcome of each task sent to ArchitecturalTestServer which unregisters subscriptions, publishers and services." wrapText="true">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Italic" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </VBox>
+            <HBox prefHeight="150.0" prefWidth="780.0">
+               <children>
+                  <BarChart fx:id="BarChartReport" legendSide="LEFT" prefHeight="150.0" prefWidth="489.0">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </BarChart>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <ListView fx:id="reportTestListView" editable="true" prefHeight="400.0" prefWidth="780.0" />
+            <HBox prefHeight="80.0" prefWidth="200.0">
+               <children>
+                  <Label text="Status: ">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding></Label>
+                  <Label fx:id="reportTestStatus" text="Label" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </HBox>
+            <Line endX="780.0" stroke="#9e7171" strokeWidth="2.0" />
+            <VBox prefHeight="200.0" prefWidth="100.0" />
+
+         </children></VBox>
+   </content>
+</ScrollPane>

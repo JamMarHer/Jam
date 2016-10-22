@@ -679,8 +679,6 @@ class Service(ServiceImpl):
     
     def __init__(self, name, service_class, handler,
                  buff_size=DEFAULT_BUFF_SIZE, error_handler=None):
-
-        
         """
         ctor.
 

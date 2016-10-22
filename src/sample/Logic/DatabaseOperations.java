@@ -25,9 +25,27 @@ public class DatabaseOperations {
         }
         if(database.equals("tests")){
             file = new File("tests.db");
-        }
 
+        }
         return file.exists();
+    }
+
+    public boolean checkTablePresent(String database, String table) throws ClassNotFoundException, SQLException {
+        Connection c = null;
+        if (database.equals("tests") && table.equals("tests")) {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:tests.db");
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+            ResultSet resultSet = c.createStatement().executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='tests';");
+            int result = resultSet.getInt(0);
+            if(result >0){
+                return false;
+            }
+            c.commit();
+            c.close();
+        }
+        return true;
     }
 
     public void generateDatabase(){

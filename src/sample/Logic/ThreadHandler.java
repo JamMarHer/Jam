@@ -41,7 +41,6 @@ public class ThreadHandler extends Thread {
             }else {
 
                 while ((line = in.readLine()) != null && continuous) {
-                    System.out.println(line);
                     returnedContinouesArray.add(line);
                     if (Thread.currentThread().isInterrupted()) {
                         break;

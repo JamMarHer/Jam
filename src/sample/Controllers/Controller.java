@@ -1,34 +1,27 @@
 package sample.Controllers;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.Interfaces.ReportInterpretation;
 import sample.Logic.*;
-import sample.Main;
 import sample.Properties.TestingProgress;
 
 import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 public class Controller implements Initializable, Serializable {
 
@@ -40,6 +33,7 @@ public class Controller implements Initializable, Serializable {
     @FXML private Text mainEnvironmentNotSetupLabel = new Text();
     @FXML private MenuItem architecturalInvariantTest = new MenuItem();
     @FXML private MenuItem loadPreviousTest = new MenuItem();
+    @FXML private MenuItem loadPreviousReport = new MenuItem();
     @FXML private BorderPane MainPane = new BorderPane();
     @FXML private TabPane MainTesting = new TabPane();
     @FXML private StackPane MainStackPane = new StackPane();
@@ -132,8 +126,37 @@ public class Controller implements Initializable, Serializable {
                 e.printStackTrace();
             }
         });
+        loadPreviousReport.setOnAction(event -> loadReport());
 
     }
+
+    private void loadReport(){
+        databaseOperations = new DatabaseOperations();
+        RequestBox requestBox = new RequestBox("Report Selection", "Select a report", false, databaseOperations);
+        RunableCommand = new String[]{};
+        try {
+            RunableCommand = requestBox.retrieveTTE();
+            databaseOperations = new DatabaseOperations();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(RunableCommand !=null) {
+            recuperatedTestThreadEnv = true;
+
+            testName = requestBox.testName;
+             try {
+                 FileInputStream fileInputStream = new FileInputStream(System.getProperty("user.dir") + "/src/sample/SavedReports/" + testName+ ".ser");
+                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                 TestReport testReport = (TestReport) objectInputStream.readObject();
+                 testReport.displayReport();
+                 objectInputStream.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
     private void loadPreviousTest(){
         databaseOperations = new DatabaseOperations();
@@ -172,9 +195,6 @@ public class Controller implements Initializable, Serializable {
         }else {
             recuperatedTestThreadEnv = false;
         }
-
-
-
     }
 
     public void initializeTest(ArchitecturalInvariantInterpretation AII){
@@ -251,7 +271,7 @@ public class Controller implements Initializable, Serializable {
         }
     }
 
-    public void StartTest () throws InterruptedException, SQLException, ClassNotFoundException, FileNotFoundException {
+    public void StartTest () throws InterruptedException, SQLException, ClassNotFoundException, IOException {
         if(recuperatedTestThreadEnv){
             System.out.print(testName);
 
@@ -262,6 +282,18 @@ public class Controller implements Initializable, Serializable {
             TestsStatusTest.setText("All Set");
             testThreadEnvi.setAllSetSucces(true);
             testThreadEnvi.start();
+            testThreadEnvi.join();
+            TestReport testReport = testThreadEnvi.getTestReport();
+            if( testReport != null){
+                System.out.println("Reporting");
+                FileOutputStream outputStream = new FileOutputStream(testThreadEnvi.PROJECTPATH + "/src/sample/SavedReports/" + testThreadEnvi.testName + ".ser");
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                objectOutputStream.writeObject(testReport);
+                objectOutputStream.close();
+                testReport.displayReport();
+            }else{
+                System.out.println("Error: Not reporting");
+            }
 
 
         }else if(projectTestPath == null || projectTestLaunchRun == null){
@@ -288,9 +320,9 @@ public class Controller implements Initializable, Serializable {
                         testThreadEnvi.join();
                         if(testThreadEnvi.getFinalEnvironmentPassed()){
                             if(!tempRequestedSave.equals("NON")){
-                                if(!databaseOperations.checkDBPresent("tests")){ // We assume that
+                                //if(!databaseOperations.checkDBPresent("tests") || !databaseOperations.checkTablePresent("tests", "tests")){ // We assume that
                                     databaseOperations.generateTestsDatabase();
-                                }
+                                //}
                                 databaseOperations.insertData("Full", testThreadEnvi.testName,Arrays.toString(testThreadEnvi.getRunCommand()),Arrays.toString(testThreadEnvi.getSupportCommand()));
                                 if(RI != null) {
                                     FileOutputStream outputStream = new FileOutputStream(testThreadEnvi.PROJECTPATH + "/src/sample/SavedTests/" + testThreadEnvi.testName + ".ser");
@@ -298,10 +330,18 @@ public class Controller implements Initializable, Serializable {
                                     objectOutputStream.writeObject(RI);
                                     objectOutputStream.close();
                                 }
-
-                                if(testThreadEnvi.startTest()){
-                                    System.out.print("SUCCCEESSS");
+                                testThreadEnvi.startTest();
+                                testThreadEnvi.join();
+                                if(testThreadEnvi.getTestReport() != null){
+                                    FileOutputStream outputStream = new FileOutputStream(testThreadEnvi.PROJECTPATH + "/src/sample/SavedReports/" + testThreadEnvi.testName + ".ser");
+                                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                                    objectOutputStream.writeObject(testThreadEnvi.getTestReport());
+                                    objectOutputStream.close();
+                                    testThreadEnvi.getTestReport().displayReport();
+                                }else {
+                                    System.out.println("Test Fail");
                                 }
+
                             }
                             System.out.print("ALLSET");
 

@@ -2,7 +2,6 @@ package sample.Logic;
 
 import sample.Interfaces.ReportInterpretation;
 import sample.Properties.TestingProgress;
-import sun.awt.image.DataBufferNative;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -20,8 +19,8 @@ public class TestThread extends Thread implements Serializable {
     private boolean FinalEnvironmentPassed;
     private TestingProgress testingProgress;
     private String ros_implementation;
-    private String ROSTCPROSPPATH = "/opt/ros/indigo/lib/python2.7/dist-packages/rospy/impl/";
-    private String ROSNODEHANDLECPATH = "/opt/ros/indigo/include/ros/";
+    private String ROSTCPROSPPATH = "/opt/ros/kinetic/lib/python2.7/dist-packages/rospy/impl/";
+    private String ROSNODEHANDLECPATH = "/opt/ros/kinetic/include/ros/";
     public String PROJECTPATH;
     private String PROJECTTESTPATH;
     private File PROJECTTESTLAUNCHROS;
@@ -32,6 +31,7 @@ public class TestThread extends Thread implements Serializable {
     private String tempTestName;
     private ReportInterpretation report;
     private String testType;
+    private TestReport testReport;
 
     public TestThread(ReportInterpretation RI, TestingProgress TP, String projectTestPath, File projectTestLaunchRos, String _testType, String _task, String _temptestName) throws SQLException, ClassNotFoundException {
         task = _task;
@@ -64,9 +64,9 @@ public class TestThread extends Thread implements Serializable {
     public void run() {
         if(task.equals("ROS")){
             testingProgress.setStateString("Testing ROS Environment");
-            String[] command = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSTCPROSPPATH + " " + "VERSE NON_SUDO"};
+            String[] command = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " + "VERSE NON_SUDO"};
             String[] directCommand = {"/bin/bash", "-c", "gksudo cp " + PROJECTPATH + "/src/sample/ROSFiles/tcpros_service.py "+ROSTCPROSPPATH + " && cp "+PROJECTPATH +"/src/sample/ROSFilesMod/node_handle.h "+ ROSNODEHANDLECPATH};
-            String[] command3 ={"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSTCPROSPPATH + " " + "VERSE NON_SUDO"};
+            String[] command3 ={"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " + "VERSE NON_SUDO"};
             System.out.print(Arrays.toString(command3));
             ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state
             ThreadHandler threadHandler1 = new ThreadHandler(directCommand, true, false);
@@ -171,7 +171,7 @@ public class TestThread extends Thread implements Serializable {
             threadHandler.start();
             try {
                 threadHandler.join(10000);
-                String[] rosverification = {"/bin/bash", "-c","rosnode list"};
+                String[] rosverification = {"/bin/bash", "-c","source /opt/ros/kinetic/setup.bash && rosnode list"};
                 ThreadHandler threadHandler1 = new ThreadHandler(rosverification,false,true);
                 threadHandler1.start();
                 threadHandler1.join();
@@ -215,12 +215,14 @@ public class TestThread extends Thread implements Serializable {
 
     }
 
-    public boolean startTest(){
+    public void startTest(){
+        testReport = null;
         HashMap<String, Integer> record = new HashMap<>();
         HashMap<String, String> pubsubser = new HashMap<>();
         pubsubser.put("/rec/arch_pub", "PUBLISHER");
         pubsubser.put("/rec/arch_srvs", "SERVICE");
         pubsubser.put("/rec/arch_sub", "SUBSCRIBER");
+
         try {
             DatabaseOperations databaseOperations = new DatabaseOperations();
             String daikonExtension = databaseOperations.retrieveData("extDir", null, "settings");
@@ -230,10 +232,21 @@ public class TestThread extends Thread implements Serializable {
             initializeATS.start();
             initializeATS.join(1000);
             System.out.print("Starting Test...");
+            System.out.print("Report generated, ready to start populating");
+
             if(testType.equals("AII")){
-                System.out.println(" [AII]");
+                TestReport testReportTemp = new TestReport(tempTestName);
+                testReportTemp.setTimeStamp(report.getTimeStamp());
+                System.out.println("Starting AII Test");
                 ArchitecturalInvariantInterpretation AIIReport = (ArchitecturalInvariantInterpretation)report;
                 HashMap<String, HashMap<String,HashMap<String, HashMap<String, ArrayList<String>>>>> generalMap = AIIReport.getGeneralMapFilterData();
+                double totalToRequest = 0;
+                for(String a : generalMap.keySet())
+                    for (String b : generalMap.get(a).keySet())
+                        for(String c : generalMap.get(a).get(b).keySet())
+                            for (String d : generalMap.get(a).get(b).get(c).keySet())
+                                totalToRequest++;
+                double totalRequested = 0;
                 for( String recordingNode : generalMap.keySet()){
                     //System.out.println("In: " + recordingNode);
                     for( String state : generalMap.get(recordingNode).keySet()){
@@ -242,12 +255,17 @@ public class TestThread extends Thread implements Serializable {
                             //System.out.println("In: " + topic_serivce);
                             for( String min_max_minmax : generalMap.get(recordingNode).get(state).get(topic_serivce).keySet()){
                                 //System.out.println("In: " + min_max_minmax);
-                                if( generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).get(0).equals("null"))
+                                if( generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).get(0).equals("null")){
+                                    totalRequested++;
                                     continue;
-                                System.out.println("DeAttaching "+ recordingNode+ "::::"+ state +":::"+ topic_serivce+"::"+
-                                        min_max_minmax+":"+Arrays.toString(generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).toArray()));
+                                }
+
+                                String currentState = recordingNode+ "::::"+ state +":::"+ topic_serivce+"::"+
+                                        min_max_minmax+":"+Arrays.toString(generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).toArray());
+                                totalRequested++;
+                                String percentage = String.valueOf((totalRequested/totalToRequest) * 100).substring(0,4) + "%";
+                                System.out.println(percentage);
                                 for(String node : generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax)){
-                                    //System.out.println("Trying: " + pubsubser.get(recordingNode) + ", With: "+node+  ", And: "+topic_serivce);
                                     String[] command = {"/bin/bash", "-c", "source "+daikonExtension+"/catkin_ws/devel/setup.bash && rosservice call /deAttacher \"task: '"+pubsubser.get(recordingNode)+"'\n" +
                                             "nodeRequest: '"+node+"'\n" +
                                             "topic_serviceRequest: '"+topic_serivce+"'\""};
@@ -260,23 +278,31 @@ public class TestThread extends Thread implements Serializable {
                                         }else {
                                             record.put(pubsubser.get(recordingNode), 1);
                                         }
-
+                                        // Deals with the success part of the report
+                                        testReportTemp.insertOutCome(currentState,"Success");
+                                        testReportTemp.setSucces(recordingNode,testReportTemp.getSucces(recordingNode)+1);
                                         runK.setContinuous(false);
+                                    }else {
+                                        // Deals with the failure part of the report
+                                        testReportTemp.insertOutCome(currentState, "Failure");
+                                        testReportTemp.setFailure(recordingNode,testReportTemp.getFailure(recordingNode)+1);
                                     }
                                 }
                             }
                         }
                     }
                 }
+                testReport = testReportTemp;
             }
 
-        }catch (InputProcessingException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(record);
-        return true;
+
+    }
+
+    public TestReport getTestReport(){
+        return testReport;
     }
 
     public void setAllSetSucces(boolean state){

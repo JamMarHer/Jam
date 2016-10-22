@@ -1,9 +1,6 @@
 #!/usr/bin/env python
-import rospy
 import os
 import sys
-import rosservice
-import xmlrpclib
 import subprocess
 import re
 import time

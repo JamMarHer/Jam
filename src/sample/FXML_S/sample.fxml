@@ -29,7 +29,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="MainPane" maxHeight="700" maxWidth="1200" minHeight="700" minWidth="1200" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<BorderPane fx:id="MainPane" maxHeight="700" maxWidth="1200" minHeight="700" minWidth="1200" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
 
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -56,6 +56,11 @@
                   <MenuItem fx:id="loadPreviousTest" mnemonicParsing="false" text="Load Previous Test" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Reports">
+              <items>
+                <MenuItem fx:id="loadPreviousReport" mnemonicParsing="false" text="Load Report" />
+              </items>
+            </Menu>
             </menus>
         </MenuBar>
     </top>
