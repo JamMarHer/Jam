@@ -13,6 +13,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import sample.Logic.ArchitecturalInvariantInterpretation;
+import sample.Logic.Reaction;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,10 +26,15 @@ import java.util.ResourceBundle;
 
 
 public class ReportController implements Initializable {
+
     @FXML private ListView<String> reportTestListView;
     @FXML private Label reportTestStatus;
     @FXML private Label reportTestName;
     @FXML private Label reportTestTime;
+    @FXML private Label reportTestTopic;
+    @FXML private Label reportTestTaskID;
+    @FXML private Label reportTestConfirmationBy;
+    @FXML private Label reportTestInvariantStatus;
 
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
@@ -38,6 +44,7 @@ public class ReportController implements Initializable {
     private String date;
     private HashMap<String, String> generalOutcome;
     private HashMap<String, HashMap<Integer, Integer>> generalSuccessFailure;
+    private HashMap<String,Reaction> reactions;
     private int fails;
     private int success;
 
@@ -56,7 +63,12 @@ public class ReportController implements Initializable {
                 new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        reportTestTopic.setText(reactions.get(newValue).getTopic());
+                        reportTestTaskID.setText(reactions.get(newValue).getTaskID());
                         reportTestStatus.setText(generalOutcome.get(newValue));
+                        reportTestConfirmationBy.setText(reactions.get(newValue).getCauseOfFail());
+                        reportTestInvariantStatus.setText(String.valueOf(reactions.get(newValue).getCrash()));
+
                     }
                 }
         );
@@ -86,11 +98,12 @@ public class ReportController implements Initializable {
 
 
 
-    public void setReport(String _name, String _date, HashMap<String, String> _generalOutome, HashMap<String, HashMap<Integer, Integer>> _generalSuccessFailure){
+    public void setReport(String _name, String _date, HashMap<String, String> _generalOutome, HashMap<String, HashMap<Integer, Integer>> _generalSuccessFailure, HashMap<String, Reaction> _reactions){
 
         name = _name;
         date = _date;
         generalOutcome = _generalOutome;
         generalSuccessFailure = _generalSuccessFailure;
+        reactions = _reactions;
     }
 }

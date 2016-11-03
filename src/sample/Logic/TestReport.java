@@ -9,7 +9,9 @@ import sample.Controllers.ReportController;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by ccc on 10/18/16.
@@ -20,11 +22,13 @@ public class TestReport implements Serializable {
     private String timeStamp;
     private HashMap<String, String> generalOutcome;
     private HashMap<String, HashMap<Integer, Integer>> generalSuccessFailure;
+    private HashMap<String,Reaction> reactions;
 
 
 
     public TestReport(String _name){
         name = _name;
+        reactions = new HashMap<>();
         generalOutcome = new HashMap<>();
         generalSuccessFailure = new HashMap<>();
         generalSuccessFailure.put("/rec/arch_sub",new HashMap<>());
@@ -44,7 +48,7 @@ public class TestReport implements Serializable {
     public void displayReport() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/FXML_S/report.fxml"));
         ReportController reportController = new ReportController();
-        reportController.setReport(name,timeStamp,generalOutcome, generalSuccessFailure);
+        reportController.setReport(name,timeStamp,generalOutcome, generalSuccessFailure, reactions);
         loader.setController(reportController);
         Parent root = loader.load();
 
@@ -62,6 +66,10 @@ public class TestReport implements Serializable {
 
 
 
+    }
+
+    public void setReactions(HashMap<String, Reaction> _reactions){
+        reactions = _reactions;
     }
 
     public void setTimeStamp(String _timeStamp){

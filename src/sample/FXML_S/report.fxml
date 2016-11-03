@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="739.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox prefHeight="800.0" prefWidth="780.0">
          <children>
@@ -31,7 +31,7 @@
             <Line endX="780.0" stroke="#9e7171" strokeWidth="2.0" />
             <VBox prefHeight="100.0" prefWidth="100.0">
                <children>
-                  <Label maxHeight="60.0" text="The following section of the reports, displays the outcome of each task sent to ArchitecturalTestServer which unregisters subscriptions, publishers and services." wrapText="true">
+                  <Label maxHeight="60.0" text="The following section of the report, displays the outcome of each task sent to ArchitecturalTestServer which unregisters subscriptions, publishers and services." wrapText="true">
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
@@ -63,23 +63,110 @@
                </VBox.margin>
             </HBox>
             <ListView fx:id="reportTestListView" editable="true" prefHeight="400.0" prefWidth="780.0" />
-            <HBox prefHeight="80.0" prefWidth="200.0">
+            <Line endX="780.0" stroke="#9e7171" strokeWidth="2.0">
+               <VBox.margin>
+                  <Insets top="2.0" />
+               </VBox.margin></Line>
+            <VBox prefHeight="65.0" prefWidth="782.0">
                <children>
-                  <Label text="Status: ">
-                     <padding>
+                  <Label text="Reaction">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
                         <Insets left="10.0" />
-                     </padding></Label>
-                  <Label fx:id="reportTestStatus" text="Label" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="29.0" prefWidth="782.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
                </children>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
                <padding>
-                  <Insets top="5.0" />
-               </padding>
-            </HBox>
-            <Line endX="780.0" stroke="#9e7171" strokeWidth="2.0" />
-            <VBox prefHeight="200.0" prefWidth="100.0" />
+                  <Insets top="10.0" />
+               </padding></VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox prefHeight="60.0" prefWidth="782.0">
+                     <children>
+                        <Label text="Topic: ">
+                           <HBox.margin>
+                              <Insets left="15.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="reportTestTopic" text="..." underline="true">
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="60.0" prefWidth="782.0">
+                     <children>
+                        <Label text="Task ID: ">
+                           <HBox.margin>
+                              <Insets left="15.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="reportTestTaskID" text="..." underline="true">
+                           <HBox.margin>
+                              <Insets left="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="60.0" prefWidth="782.0">
+                     <children>
+                        <Label text="Deregistration: ">
+                           <HBox.margin>
+                              <Insets left="15.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="reportTestStatus" text="...">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Italic" size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="60.0" prefWidth="782.0">
+                     <children>
+                        <Label text="Confirmation By: ">
+                           <HBox.margin>
+                              <Insets left="15.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="reportTestConfirmationBy" text="..." underline="true">
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children></HBox>
+                  <HBox prefHeight="60.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Invariant Status: ">
+                           <HBox.margin>
+                              <Insets left="15.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="reportTestInvariantStatus" text="..." underline="true">
+                           <HBox.margin>
+                              <Insets left="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children></HBox>
+               </children>
+            </VBox>
 
          </children></VBox>
    </content>

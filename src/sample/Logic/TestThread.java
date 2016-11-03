@@ -7,6 +7,7 @@ import java.io.*;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by jam on 9/21/16.
@@ -32,6 +33,8 @@ public class TestThread extends Thread implements Serializable {
     private ReportInterpretation report;
     private String testType;
     private TestReport testReport;
+    private ThreadHandler initialRunningThreadHandler;
+    private HashMap<String, Reaction> reactions;
 
     public TestThread(ReportInterpretation RI, TestingProgress TP, String projectTestPath, File projectTestLaunchRos, String _testType, String _task, String _temptestName) throws SQLException, ClassNotFoundException {
         task = _task;
@@ -46,6 +49,7 @@ public class TestThread extends Thread implements Serializable {
         tempTestName = _temptestName;
         report = RI;
         testType = _testType;
+        reactions = new HashMap<>();
 
     }
 
@@ -180,6 +184,7 @@ public class TestThread extends Thread implements Serializable {
                     testName= tempTestName +new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss").format(new Date()).replace("/","_");
                     FinalEnvironmentPassed = true;
                     successfullRun = setup;
+                    initialRunningThreadHandler = threadHandler;
                     successfullSupportRun = requestedCommand;
                 }
             } catch (Exception e) {
@@ -282,23 +287,51 @@ public class TestThread extends Thread implements Serializable {
                                         testReportTemp.insertOutCome(currentState,"Success");
                                         testReportTemp.setSucces(recordingNode,testReportTemp.getSucces(recordingNode)+1);
                                         runK.setContinuous(false);
+                                        reactions.put(currentState, getReaction(topic_serivce,currentState, true));
                                     }else {
                                         // Deals with the failure part of the report
                                         testReportTemp.insertOutCome(currentState, "Failure");
                                         testReportTemp.setFailure(recordingNode,testReportTemp.getFailure(recordingNode)+1);
+                                        runK.setContinuous(false);
+                                        reactions.put(currentState, getReaction(topic_serivce,currentState, false));
                                     }
                                 }
                             }
                         }
                     }
                 }
+                testReportTemp.setReactions(reactions);
                 testReport = testReportTemp;
+
             }
 
         }catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+    public Reaction getReaction(String topic, String state, boolean failureSuccess) throws InterruptedException {
+        Reaction reaction = new Reaction(topic,state,failureSuccess);
+        String[] command = {"/bin/bash", "-c", "source /opt/ros/kinetic/setup.bash && rostopic echo "+ topic};
+        ThreadHandler threadHandler = new ThreadHandler(command, false, true);
+        threadHandler.start();
+        threadHandler.join(3000);
+        if(threadHandler.returnedContinouesArray.get(0).equals("WARNING: no messages received and simulated time is active.")){
+            reaction.setCauseOfFail("No Messages received and simulated time is active.");
+        }
+        if (threadHandler.returnedContinouesArray.get(0).equals("WARNING: topic ["+topic+"] does not appear to be published yet")){
+            reaction.setCauseOfFail("Topic does not appear to be published yet.");
+        }
+        threadHandler.setContinuous(false);
+        String[] command2 = {"/bin/bash", "-c", "source /opt/ros/kinetic/setup.bash && rosnode list"};
+        ThreadHandler threadHandler1 = new ThreadHandler(command2, false, true);
+        threadHandler1.start();
+        threadHandler1.join(3000);
+        if(threadHandler.returnedContinouesArray.get(0).equals("ERROR: Unable to communicate with master!")){
+            reaction.setCrash(true);
+        }
+        threadHandler1.setContinuous(false);
+        return reaction;
     }
 
     public TestReport getTestReport(){
@@ -321,8 +354,7 @@ public class TestThread extends Thread implements Serializable {
     public String[] getSupportCommand(){
         return  successfullSupportRun;
     }
-
-
+    public ThreadHandler getInitialRunningThreadHandler(){ return  initialRunningThreadHandler;}
     private char checkScriptLaunch(String projectlaunchROS){
         String[] temp  = projectlaunchROS.split("\\.");
         System.out.print(Arrays.toString(temp));

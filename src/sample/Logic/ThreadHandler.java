@@ -29,6 +29,7 @@ public class ThreadHandler extends Thread {
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
+
             String line;
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
@@ -42,6 +43,7 @@ public class ThreadHandler extends Thread {
 
                 while ((line = in.readLine()) != null && continuous) {
                     returnedContinouesArray.add(line);
+
                     if (Thread.currentThread().isInterrupted()) {
                         break;
                     }
@@ -49,7 +51,7 @@ public class ThreadHandler extends Thread {
             }
 
 
-            process.destroy();
+            process.destroyForcibly();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -59,7 +61,7 @@ public class ThreadHandler extends Thread {
         out.write(command);
     }
 
-    public void setContinuous(boolean state){
+    public void setContinuous(boolean state) {
         continuous = state;
 
     }
