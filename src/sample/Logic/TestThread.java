@@ -222,6 +222,7 @@ public class TestThread extends Thread implements Serializable {
 
     public void startTest(){
         testReport = null;
+        System.out.println("Starting Test...");
         HashMap<String, Integer> record = new HashMap<>();
         HashMap<String, String> pubsubser = new HashMap<>();
         pubsubser.put("/rec/arch_pub", "PUBLISHER");
@@ -236,13 +237,12 @@ public class TestThread extends Thread implements Serializable {
             ThreadHandler initializeATS = new ThreadHandler(initialize, false,true);
             initializeATS.start();
             initializeATS.join(1000);
-            System.out.print("Starting Test...");
-            System.out.print("Report generated, ready to start populating");
+            System.out.println("Report generated, ready to start populating...");
 
             if(testType.equals("AII")){
                 TestReport testReportTemp = new TestReport(tempTestName);
                 testReportTemp.setTimeStamp(report.getTimeStamp());
-                System.out.println("Starting AII Test");
+                System.out.println("Populating AII Test...");
                 ArchitecturalInvariantInterpretation AIIReport = (ArchitecturalInvariantInterpretation)report;
                 HashMap<String, HashMap<String,HashMap<String, HashMap<String, ArrayList<String>>>>> generalMap = AIIReport.getGeneralMapFilterData();
                 double totalToRequest = 0;
@@ -253,13 +253,9 @@ public class TestThread extends Thread implements Serializable {
                                 totalToRequest++;
                 double totalRequested = 0;
                 for( String recordingNode : generalMap.keySet()){
-                    //System.out.println("In: " + recordingNode);
                     for( String state : generalMap.get(recordingNode).keySet()){
-                        //System.out.println("In: " + state);
                         for( String topic_serivce : generalMap.get(recordingNode).get(state).keySet()){
-                            //System.out.println("In: " + topic_serivce);
                             for( String min_max_minmax : generalMap.get(recordingNode).get(state).get(topic_serivce).keySet()){
-                                //System.out.println("In: " + min_max_minmax);
                                 if( generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).get(0).equals("null")){
                                     totalRequested++;
                                     continue;

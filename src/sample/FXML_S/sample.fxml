@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
-<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <BorderPane fx:id="MainPane" maxHeight="700" maxWidth="1200" minHeight="700" minWidth="1200" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
@@ -96,203 +86,7 @@
     </bottom>
     <center>
         <AnchorPane>
-            <TabPane fx:id="MainTesting" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600" minWidth="1000" nodeOrientation="LEFT_TO_RIGHT" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
-                <tabs>
-
-                    <Tab text="Untitled Tab 1">
-                        <content>
-
-                            <AnchorPane minHeight="600" minWidth="1000.0" prefHeight="180.0" prefWidth="200.0">
-                                <children>
-                                    <VBox fx:id="MainTestingTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1">
-                                        <children>
-                                            <Label fx:id="InputText" text="Label">
-                                                <VBox.margin>
-                                                    <Insets left="5.0" top="5.0" />
-                                                </VBox.margin>
-                                    <font>
-                                       <Font size="17.0" />
-                                    </font>
-                                            </Label>
-                                            <Line endX="50.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
-                                            <Label fx:id="InputStimeStamp" text="Label">
-                                                <VBox.margin>
-                                                    <Insets left="5.0" />
-                                                </VBox.margin>
-                                                <font>
-                                                    <Font name="System Italic" size="10.0" />
-                                                </font>
-                                            </Label>
-                                            <HBox prefHeight="100.0" prefWidth="200.0">
-                                    <VBox prefHeight="150.0" prefWidth="300.0">
-                                       <children>
-                                          <Label fx:id="InputTotalPub" text="Label">
-                                             <VBox.margin>
-                                                <Insets top="20.0" />
-                                             </VBox.margin></Label>
-                                          <Label fx:id="InputTotalSub" text="Label">
-                                             <VBox.margin>
-                                                <Insets top="5.0" />
-                                             </VBox.margin></Label>
-                                          <Label fx:id="InputTotalServ" text="Label">
-                                             <VBox.margin>
-                                                <Insets top="5.0" />
-                                             </VBox.margin></Label>
-                                          <Label fx:id="InputTotal" text="Label">
-                                             <VBox.margin>
-                                                <Insets top="5.0" />
-                                             </VBox.margin></Label>
-                                       </children>
-                                       <HBox.margin>
-                                          <Insets left="5.0" top="5.0" />
-                                       </HBox.margin>
-                                    </VBox>
-                                                <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                <VBox alignment="CENTER_RIGHT">
-                                                    <BarChart fx:id="BarChartII" animated="false" legendSide="LEFT" HBox.hgrow="ALWAYS">
-                                                        <xAxis>
-                                                            <CategoryAxis side="BOTTOM" />
-                                                        </xAxis>
-                                                        <yAxis>
-                                                            <NumberAxis side="LEFT" />
-                                                        </yAxis>
-                                          <VBox.margin>
-                                             <Insets right="10.0" />
-                                          </VBox.margin>
-                                                    </BarChart>
-                                       <HBox.margin>
-                                          <Insets right="20.0" />
-                                       </HBox.margin>
-                                                </VBox>
-                                    <VBox.margin>
-                                       <Insets />
-                                    </VBox.margin>
-                                            </HBox>
-                                 <Line endX="200.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
-                                 <VBox prefHeight="100.0" prefWidth="100.0">
-                                    <children>
-                                       <Label text="In order to start the Architectural Invariant Test it is necessary to provide the path of the project and to the ros launch or run file." wrapText="true">
-                                          <VBox.margin>
-                                             <Insets left="5.0" top="5.0" />
-                                          </VBox.margin>
-                                       </Label>
-                                       <Label text="The project path (ros_catkin_ws) is necessary to setup the environment. The lauch/run file is necessary to initialize the system.">
-                                          <VBox.margin>
-                                             <Insets left="5.0" />
-                                          </VBox.margin>
-                                       </Label>
-                                        <Button fx:id="testing_project_button_locatedirectory" mnemonicParsing="false" onAction="#testingLocatePath" prefHeight="20.0" style="-fx-background-color: lightgray;" text="Project ros_catkin_ws">
-                                            <opaqueInsets>
-                                                <Insets left="10.0" />
-                                            </opaqueInsets>
-                                            <effect>
-                                                <Blend />
-                                            </effect>
-                                          <graphic>
-                                              <TextField fx:id="testing_prokect_edittext_path" maxHeight="20.0" prefHeight="20.0" prefWidth="400.0" text="  /...">
-                                                  <opaqueInsets>
-                                                      <Insets />
-                                                  </opaqueInsets>
-                                                  <font>
-                                                      <Font size="12.0" />
-                                                  </font>
-                                              </TextField>
-                                          </graphic>
-                                          <VBox.margin>
-                                             <Insets left="10.0" top="5.0" />
-                                          </VBox.margin>
-                                        </Button>
-                                        <Button fx:id="testing_project_button_locate_launch_run" mnemonicParsing="false" onAction="#testingLocateLaunchRun" prefHeight="20.0" style="-fx-background-color: lightgray;" text="Project    .launch/.run">
-                                            <opaqueInsets>
-                                                <Insets left="10.0" />
-                                            </opaqueInsets>
-                                            <HBox.margin>
-                                                <Insets top="5.0" />
-                                            </HBox.margin>
-                                            <effect>
-                                                <Blend />
-                                            </effect>
-                                            <graphic>
-                                                <TextField fx:id="testing_prokect_edittext_path_launch_run" maxHeight="20.0" prefHeight="20.0" prefWidth="400.0" text="  /...">
-                                                    <opaqueInsets>
-                                                        <Insets />
-                                                    </opaqueInsets>
-                                                    <font>
-                                                        <Font size="12.0" />
-                                                    </font>
-                                                </TextField>
-                                            </graphic>
-                                          <VBox.margin>
-                                             <Insets left="10.0" top="5.0" />
-                                          </VBox.margin>
-                                        </Button>
-                                    </children></VBox>
-                                 <Line endX="400.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0">
-                                    <VBox.margin>
-                                       <Insets bottom="5.0" right="5.0" top="10.0" />
-                                    </VBox.margin>
-                                 </Line>
-                                 <Label text="Tests can take a long time and it is recommended to not work on ros projects while in execution. This can cause problems.">
-                                    <VBox.margin>
-                                       <Insets left="5.0" />
-                                    </VBox.margin>
-                                 </Label>
-                                 <Label text="Mushroom would verify that the version of ROS being used is unaltered (it would change back to prior projects modifications), this to mimic a real scenario." wrapText="true">
-                                    <VBox.margin>
-                                       <Insets left="5.0" />
-                                    </VBox.margin>
-                                 </Label>
-                                 <Label fx:id="TestLoadPreviousSystemLabel" text="Mushroom saves successful environment checks. If you have not modified your system it's more convient to load a previous set of threads. Want to load a previous system?" wrapText="true">
-                                    <VBox.margin>
-                                       <Insets left="5.0" top="5.0" />
-                                    </VBox.margin>
-                                    <graphic>
-                                       <HBox prefHeight="25.0" prefWidth="75.0">
-                                          <children>
-                                             <Button fx:id="ButtonTestLoadPreviousSystem" mnemonicParsing="false" text="Load">
-                                                <HBox.margin>
-                                                   <Insets left="7.0" />
-                                                </HBox.margin>
-                                             </Button>
-                                          </children>
-                                       </HBox>
-                                    </graphic>
-                                 </Label>
-                                 <Line endX="650.0" startX="-100.0" stroke="#9e7171" strokeWidth="2.0" />
-                                            <Region prefHeight="80.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                 <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0">
-                                    <children>
-                                       <VBox prefHeight="50.0" prefWidth="50.0">
-                                          <children>
-      
-                                             <ProgressIndicator fx:id="TestingProgressIndicator" progress="0.0" />
-                                          </children>
-                                       </VBox>
-                                    </children>
-                                 </HBox>
-                                 <HBox fillHeight="false" prefHeight="5.0" prefWidth="200.0">
-                                    <children>
-                                       <Label fx:id="TestsStatusTest" alignment="BOTTOM_LEFT" text="Label">
-                                          <HBox.margin>
-                                             <Insets left="5.0" top="5.0" />
-                                          </HBox.margin>
-                                       </Label>
-                                        <Region prefHeight="1.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                       <Button fx:id="TestsStartTest" alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Start Test">
-                                          <HBox.margin>
-                                             <Insets right="5.0" />
-                                          </HBox.margin></Button>
-                                    </children>
-                                 </HBox>
-                                        </children>
-                                        </VBox>
-                                </children>
-                            </AnchorPane>
-
-                        </content>
-                    </Tab>
-                </tabs>
-            </TabPane>
+            <TabPane fx:id="MainTesting" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600" minWidth="1000" nodeOrientation="LEFT_TO_RIGHT" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" />
             <StackPane fx:id="MainStackPane" prefHeight="601.0" prefWidth="1002.0" style="-fx-background-color: #c6c6c6;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER_RIGHT">
                 <children>
                     <Text fx:id="mainEnvironmentNotSetupLabel" fill="#6b6969" strokeType="OUTSIDE" strokeWidth="0.0" text="Environment has not been setup.">
