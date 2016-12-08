@@ -10,8 +10,9 @@ import java.util.HashMap;
  */
 public interface NodeInteractionDependency {
 
-    public void ROSNode(String name, ArrayList<String> services,ArrayList<String> subscriptions, ArrayList<String> publications);
+    public void ROSNode();
     public String getName();
+    public void populate(String name, ArrayList<String> services,ArrayList<String> subscriptions, ArrayList<String> publications);
 
     public ArrayList<String> getServices();
     public ArrayList<String> getSubscriptions();

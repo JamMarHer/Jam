@@ -51,6 +51,11 @@
                 <MenuItem fx:id="loadPreviousReport" mnemonicParsing="false" text="Load Report" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Monitor">
+              <items>
+                <MenuItem fx:id="rosMonitor" mnemonicParsing="false" text="Live ROS" />
+              </items>
+            </Menu>
             </menus>
         </MenuBar>
     </top>

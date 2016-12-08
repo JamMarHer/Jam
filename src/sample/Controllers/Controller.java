@@ -35,6 +35,7 @@ public class Controller implements Initializable, Serializable {
     @FXML private Line mainEnvironmentNotSetupLine = new Line();
     @FXML private Text mainEnvironmentNotSetupLabel = new Text();
     @FXML private MenuItem architecturalInvariantTest = new MenuItem();
+    @FXML private MenuItem rosMonitor = new MenuItem();
     @FXML private MenuItem loadPreviousTest = new MenuItem();
     @FXML private MenuItem loadPreviousReport = new MenuItem();
     @FXML private BorderPane MainPane = new BorderPane();
@@ -44,6 +45,7 @@ public class Controller implements Initializable, Serializable {
     @FXML private Button ButtonTestLoadPreviousSystem = new Button();
     @FXML private Label TestLoadPreviousSystemLabel = new Label();
     @FXML private Button TestsStartTest = new Button();
+    @FXML private TreeTableColumn nodesMainTreeTable;
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
     final TestingProgress testingProgress = new TestingProgress();
@@ -84,9 +86,9 @@ public class Controller implements Initializable, Serializable {
             ButtonTestLoadPreviousSystem.setVisible(false);
             TestLoadPreviousSystemLabel.setVisible(false);
         }
-        ButtonTestLoadPreviousSystem.setOnAction(event -> loadPreviousTest());
+        ButtonTestLoadPreviousSystem.setOnAction(event -> loadPreviousTest(false));
 
-        loadPreviousTest.setOnAction(event -> loadPreviousTest());
+        loadPreviousTest.setOnAction(event -> loadPreviousTest(false));
 
 
 
@@ -124,6 +126,34 @@ public class Controller implements Initializable, Serializable {
             }
         });
 
+        rosMonitor.setOnAction(event -> {
+            boolean loadSkip = false;
+            MonitorTabController monitorTabController = new MonitorTabController();
+            String[] command = {"/bin/bash", "-c", "source /opt/ros/kinetic/setup.bash && rosnode list "};
+            ThreadHandler threadHandler = new ThreadHandler(command, false, true);
+            threadHandler.run();
+            boolean currentSystemRunning = threadHandler.returnedContinouesArray.get(0).equals("ERROR: Unable to communicate with master!");
+            if(!currentSystemRunning) {
+                RequestBox requestBox = new RequestBox("System already running", "There is a ROS system already running. Do you want to monitor such system?", true);
+                loadSkip = requestBox.requestPass();
+                if(loadSkip){
+                    monitorTabController.setupMonitorTab(null, null,null,null,"MON","RUN",null, null,null, true, nodesMainTreeTable);
+                }
+            }else {
+                loadPreviousTest(true);
+                monitorTabController.setupMonitorTab(RI,testingProgress,projectTestPath,projectTestLaunchRun,"MON","RUN",testName, RunableCommand,RunableSupportCommand, false, nodesMainTreeTable);
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/FXML_S/sample_live_monitor_tab.fxml"));
+            loader.setController(monitorTabController);
+            MainStackPane.setVisible(false);
+            MainTesting.setVisible(true);
+            try {
+                MainTesting.getTabs().add(loader.load());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         loadPreviousReport.setOnAction(event -> loadReport());
 
@@ -156,8 +186,8 @@ public class Controller implements Initializable, Serializable {
             }
         }
 
-
-    private void loadPreviousTest(){
+    // This method covers the recovery of previous systems that have been ran ( Also used for LiveMonitor)
+    private void loadPreviousTest(boolean liveMonitor){
         databaseOperations = new DatabaseOperations();
         RequestBox requestBox = new RequestBox("Pick a System", "Select a previous system", false, databaseOperations);
         RunableCommand = new String[]{};
@@ -173,14 +203,16 @@ public class Controller implements Initializable, Serializable {
             RunableSupportCommand = requestBox.supportCommand;
             testName = requestBox.testName;
 
-            RequestBox requestBox2 = new RequestBox("Previous post-daikon report", "There is an available post-daikon report. Do you want to use it?");
-            if(requestBox2.requestPass()){
+
+            boolean dummyPass = true; //TODO needed if it is planned to let other reports be loaded with previous systems.
+            if(dummyPass){
                 try {
                     FileInputStream fileInputStream = new FileInputStream(testThreadEnvi.PROJECTPATH + "/src/sample/SavedTests/" + testName+ ".ser");
                     System.out.println(testThreadEnvi.PROJECTPATH + "/src/sample/SavedTests/" + testName+ ".ser");
                     ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
                     RI = (ArchitecturalInvariantInterpretation) objectInputStream.readObject();
-
+                    if(liveMonitor)
+                        return;
                     objectInputStream.close();
                     TestTabController testTabController = new TestTabController();
                     testTabController.setupTestTab(RI, testName, recuperatedTestThreadEnv, RunableCommand, RunableSupportCommand, new DatabaseOperations());

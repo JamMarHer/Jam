@@ -4,17 +4,23 @@ import sample.Interfaces.NodeInteractionDependency;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * Created by jam on 9/10/16.
  */
 public class ROSNode implements NodeInteractionDependency {
 
+
+    //***** Publications and Subscribers contain type
+    //      Following format
+    //      Name *** Type
     private HashMap<String, ArrayList<String>> characteristics;
     String name;
 
-    @Override
-    public void ROSNode(String _name, ArrayList<String> _services, ArrayList<String> _subscriptions, ArrayList<String> _publications) {
+
+    public void populate(String _name, ArrayList<String> _services, ArrayList<String> _subscriptions, ArrayList<String> _publications) {
+        characteristics = new HashMap<>();
         name = _name;
         characteristics.put("services",_services);
         characteristics.put("subscriptions",_subscriptions);
@@ -49,6 +55,11 @@ public class ROSNode implements NodeInteractionDependency {
             }
         }
         return prior;
+    }
+
+    @Override
+    public void ROSNode() {
+
     }
 
     @Override

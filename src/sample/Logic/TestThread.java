@@ -35,10 +35,12 @@ public class TestThread extends Thread implements Serializable {
     private TestReport testReport;
     private ThreadHandler initialRunningThreadHandler;
     private HashMap<String, Reaction> reactions;
+    private boolean monitor;
 
     public TestThread(ReportInterpretation RI, TestingProgress TP, String projectTestPath, File projectTestLaunchRos, String _testType, String _task, String _temptestName) throws SQLException, ClassNotFoundException {
         task = _task;
         ROSPassed = false;
+        monitor = false;
         testingProgress = TP;
         DatabaseOperations databaseOperations = new DatabaseOperations();
         ros_implementation = databaseOperations.retrieveData("extDir",null,"settings");
@@ -214,10 +216,9 @@ public class TestThread extends Thread implements Serializable {
                 e.printStackTrace();
             }
             System.out.print("Running program");
-            startTest();
-
+            if(!monitor)
+                startTest();
         }
-
     }
 
     public void startTest(){
@@ -337,6 +338,7 @@ public class TestThread extends Thread implements Serializable {
     public void setAllSetSucces(boolean state){
         allSetSucces = state;
     }
+    public void setMonitor(boolean state){ monitor = state;}
 
     public void setRunCommand(String[] command){
         successfullRun = command;
