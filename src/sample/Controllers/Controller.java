@@ -1,5 +1,6 @@
 package sample.Controllers;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,7 +46,7 @@ public class Controller implements Initializable, Serializable {
     @FXML private Button ButtonTestLoadPreviousSystem = new Button();
     @FXML private Label TestLoadPreviousSystemLabel = new Label();
     @FXML private Button TestsStartTest = new Button();
-    @FXML private TreeTableColumn nodesMainTreeTable;
+    @FXML private TreeTableView<String> MainTreeTable;
     final CategoryAxis xAxys = new CategoryAxis();
     final NumberAxis yAxys = new NumberAxis();
     final TestingProgress testingProgress = new TestingProgress();
@@ -61,10 +62,12 @@ public class Controller implements Initializable, Serializable {
     private String[] RunableCommand;
     private String[] RunableSupportCommand;
     private String testName;
+    private int numberOfMonitors;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        numberOfMonitors = 0;
         databaseOperations = new DatabaseOperations();
         TestsStatusTest.setText("...");
         try {
@@ -137,19 +140,24 @@ public class Controller implements Initializable, Serializable {
                 RequestBox requestBox = new RequestBox("System already running", "There is a ROS system already running. Do you want to monitor such system?", true);
                 loadSkip = requestBox.requestPass();
                 if(loadSkip){
-                    monitorTabController.setupMonitorTab(null, null,null,null,"MON","RUN",null, null,null, true, nodesMainTreeTable);
+                    monitorTabController.setupMonitorTab(null, null,null,null,"MON","RUN",null, null,null, true, MainTreeTable, "Monitor " + numberOfMonitors);
                 }
             }else {
                 loadPreviousTest(true);
-                monitorTabController.setupMonitorTab(RI,testingProgress,projectTestPath,projectTestLaunchRun,"MON","RUN",testName, RunableCommand,RunableSupportCommand, false, nodesMainTreeTable);
+                monitorTabController.setupMonitorTab(RI,testingProgress,projectTestPath,projectTestLaunchRun,"MON","RUN",testName, RunableCommand,RunableSupportCommand, false, MainTreeTable, "Monitor " + numberOfMonitors);
             }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/FXML_S/sample_live_monitor_tab.fxml"));
-            loader.setController(monitorTabController);
-            MainStackPane.setVisible(false);
-            MainTesting.setVisible(true);
+
             try {
-                MainTesting.getTabs().add(loader.load());
+                FXMLLoader loader =  new FXMLLoader(getClass().getResource("/sample/FXML_S/sample_live_monitor_tab.fxml"));
+                loader.setController(monitorTabController);
+                Tab tab = loader.load();
+                tab.setText("Monitor " + numberOfMonitors);
+                MainStackPane.setVisible(false);
+                MainTesting.setVisible(true);
+
+                numberOfMonitors++;
+                MainTesting.getTabs().add(tab);
             } catch (IOException e) {
                 e.printStackTrace();
             }

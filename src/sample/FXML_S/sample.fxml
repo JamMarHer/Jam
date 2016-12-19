@@ -8,7 +8,6 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,7 +18,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="MainPane" maxHeight="700" maxWidth="1200" minHeight="700" minWidth="1200" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<BorderPane fx:id="MainPane"  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="800.0" minWidth="1400.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
 
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -61,11 +60,7 @@
     </top>
     <left>
         <AnchorPane>
-            <TreeTableView minHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
-                <columns>
-                    <TreeTableColumn fx:id="nodesMainTreeTable" prefWidth="200" text="Nodes" />
-                </columns>
-            </TreeTableView>
+            <TreeTableView fx:id="MainTreeTable" minHeight="200.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER" />
         </AnchorPane>
     </left>
     <bottom>

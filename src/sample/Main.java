@@ -29,6 +29,7 @@ public class Main extends Application {
             databaseOperations.insertData("extDir", "/...", "settings");
             databaseOperations.insertData("extDaikon", "/...", "settings");
             InitialSetup initialSetup = new InitialSetup();
+
             initialSetup.display();
         }else {
             Parent root = FXMLLoader.load(getClass().getResource("/sample/FXML_S/sample.fxml"));
@@ -36,7 +37,7 @@ public class Main extends Application {
             primaryStage.getIcons().add(new Image("/sample/images/post_icon.png"));
             primaryStage.setTitle("Mushroom");
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
+            primaryStage.setResizable(true);
             primaryStage.show();
         }
     }

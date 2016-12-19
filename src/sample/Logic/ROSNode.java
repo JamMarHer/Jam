@@ -16,7 +16,7 @@ public class ROSNode implements NodeInteractionDependency {
     //      Following format
     //      Name *** Type
     private HashMap<String, ArrayList<String>> characteristics;
-    String name;
+    protected String name;
 
 
     public void populate(String _name, ArrayList<String> _services, ArrayList<String> _subscriptions, ArrayList<String> _publications) {
