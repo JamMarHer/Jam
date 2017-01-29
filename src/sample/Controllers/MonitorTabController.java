@@ -218,6 +218,8 @@ public class MonitorTabController implements Initializable {
                     e.printStackTrace();
                 }
             }
+
+
         }
         public void start(){
             if(thread == null){

@@ -28,24 +28,36 @@ public class InitialSetupController implements Initializable {
     @FXML CheckBox setup_checkbox_local = new CheckBox();
     @FXML CheckBox setup_checkbox_shh = new CheckBox();
     @FXML Button setup_button_begin = new Button();
+
     @FXML BorderPane setup_ros = new BorderPane();
     @FXML Button setup_ros_button_locatedirectory = new Button();
+    @FXML TextField setup_ros_edittext_path = new TextField();
     @FXML Button setup_ros_button_next = new Button();
     @FXML Button setup_ros_button_back = new Button();
+
+    @FXML BorderPane setup_ros_location = new BorderPane();
+    @FXML Button setup_ros_location_button_locatedirectory = new Button();
+    @FXML TextField setup_ros_location_edittext_path = new TextField();
+    @FXML Button setup_ros_location_button_next = new Button();
+    @FXML Button setup_ros_location_button_back = new Button();
+
     @FXML BorderPane setup_daikon = new BorderPane();
     @FXML Button setup_daikon_button_locatedirectory = new Button();
     @FXML TextField setup_daikon_edittext_path = new TextField();
     @FXML Button setup_daikon_button_next = new Button();
     @FXML Button setup_daikon_button_back = new Button();
+
     @FXML BorderPane setup_test = new BorderPane();
-    @FXML TextField setup_ros_edittext_path = new TextField();
     @FXML Button setup_test_button_next = new Button();
 
     private FXMLLoader welcomeScene = new FXMLLoader(getClass().getResource("/sample/FXML_S/setup.fxml"));
     private FXMLLoader rosScene = new FXMLLoader(getClass().getResource("/sample/FXML_S/setup_ros.fxml"));
     private FXMLLoader daikonScene = new FXMLLoader(getClass().getResource("/sample/FXML_S/setup_daikon.fxml"));
+    private FXMLLoader rosLocationScene = new FXMLLoader(getClass().getResource("/sample/FXML_S/setup_ros_location.fxml"));
     private FXMLLoader testScene = new FXMLLoader(getClass().getResource("/sample/FXML_S/setup_test.fxml"));
-    private int currentScene = 0; // 0 = welcome, 1 = ros, 2 = daikon, 3 = test;
+    private int currentScene = 0;
+
+    // 0 = welcome, 1 = ros, 2 = ros lcoation, 3 = daikon, 4 = test;
 
 
 
@@ -57,27 +69,38 @@ public class InitialSetupController implements Initializable {
 
         it.setImage(new Image("file:src/sample/images/post_icon.png"));
 
-
+        setup_button_begin.setOnAction(event ->{
+            //currentScene = 1;
+            System.out.print(currentScene);
+            updateScene(rosScene, setup_button_begin, 1);
+        });
+        setup_ros_button_next.setOnAction(event ->{
+            //currentScene = 2;
+            updateScene(rosLocationScene, setup_ros_button_next, 2);
+        });
+        setup_ros_location_button_next.setOnAction(event ->{
+            //currentScene = 3;
+            updateScene(daikonScene, setup_ros_location_button_next, 3);
+        });
+        setup_daikon_button_next.setOnAction(event ->{
+            //currentScene = 4;
+            updateScene(testScene, setup_daikon_button_next, 4);
+        });
+        setup_daikon_button_back.setOnAction(event ->{
+            //currentScene = 3;
+            updateScene(rosLocationScene, setup_daikon_button_back, 2);
+        });
+        setup_ros_location_button_back.setOnAction(event ->{
+            //currentScene = 2;
+            updateScene(rosLocationScene, setup_ros_location_button_back, 1);
+        });
         setup_ros_button_back.setOnAction(event ->{
                 updateScene(welcomeScene, setup_ros_button_back, 0);
         });
-        setup_daikon_button_back.setOnAction(event ->{
-                currentScene = 1;
-                updateScene(rosScene, setup_daikon_button_back, 1);
-        });
-        setup_button_begin.setOnAction(event ->{
-                currentScene = 1;
-                System.out.print(currentScene);
-                updateScene(rosScene, setup_button_begin, 1);
-        });
-        setup_ros_button_next.setOnAction(event ->{
-                currentScene = 2;
-                updateScene(daikonScene, setup_ros_button_next, 2);
-        });
-        setup_daikon_button_next.setOnAction(event ->{
-                currentScene = 3;
-                updateScene(testScene, setup_daikon_button_next, 3);
-        });
+
+
+
+
         /*
         setup_test_button_back.setOnAction(event ->{
                 currentScene
@@ -120,6 +143,9 @@ public class InitialSetupController implements Initializable {
                 directoryChooser.setTitle("ROS Implementation Directory");
             }
             if(currentScene == 2){
+                directoryChooser.setTitle("ROS Directory");
+            }
+            if(currentScene == 3){
                 directoryChooser.setTitle("Daikon Directory");
             }
             if(currentScene == 1){
@@ -127,6 +153,10 @@ public class InitialSetupController implements Initializable {
                 databaseOperations.updateData("extDir",selectedDirectory.getAbsolutePath(), "settings");
             }
             if(currentScene == 2){
+                setup_ros_location_edittext_path.setText(selectedDirectory.getAbsolutePath());
+                databaseOperations.updateData("extROS",selectedDirectory.getAbsolutePath(), "settings");
+            }
+            if(currentScene == 3){
                 setup_daikon_edittext_path.setText(selectedDirectory.getAbsolutePath());
                 databaseOperations.updateData("extDaikon",selectedDirectory.getAbsolutePath(), "settings");
             }

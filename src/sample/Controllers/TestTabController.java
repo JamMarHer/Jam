@@ -75,8 +75,6 @@ public class TestTabController implements Initializable {
                 e.printStackTrace();
             }
         });
-
-
     }
 
     public void initializeTest(ArchitecturalInvariantInterpretation AII){

@@ -15,13 +15,14 @@ import java.util.concurrent.ThreadFactory;
 public class TestThread extends Thread implements Serializable {
 
     private String task;
-    private boolean ROSPassed;
+
     private boolean PathPassed;
     private boolean FinalEnvironmentPassed;
     private TestingProgress testingProgress;
     private String ros_implementation;
-    private String ROSTCPROSPPATH = "/opt/ros/kinetic/lib/python2.7/dist-packages/rospy/impl/";
-    private String ROSNODEHANDLECPATH = "/opt/ros/kinetic/include/ros/";
+    private String ROSTCPROSPPATH;
+    private String ROSNODEHANDLECPATH;
+    private String ROSPATH;
     public String PROJECTPATH;
     private String PROJECTTESTPATH;
     private File PROJECTTESTLAUNCHROS;
@@ -37,13 +38,20 @@ public class TestThread extends Thread implements Serializable {
     private HashMap<String, Reaction> reactions;
     private boolean monitor;
 
+    public boolean ROSPassed;
+
     public TestThread(ReportInterpretation RI, TestingProgress TP, String projectTestPath, File projectTestLaunchRos, String _testType, String _task, String _temptestName) throws SQLException, ClassNotFoundException {
         task = _task;
         ROSPassed = false;
         monitor = false;
         testingProgress = TP;
         DatabaseOperations databaseOperations = new DatabaseOperations();
+        System.out.println("NOT HERE");
+        ROSPATH = databaseOperations.retrieveData("extROS", null, "settings");
+        System.out.println("NOT HERE");
         ros_implementation = databaseOperations.retrieveData("extDir",null,"settings");
+        ROSTCPROSPPATH = ROSPATH +"/lib/python2.7/dist-packages/rospy/impl/";
+        ROSNODEHANDLECPATH = ROSPATH + "/include/ros/";
         PROJECTPATH = System.getProperty("user.dir");
         PROJECTTESTPATH = projectTestPath;
         PROJECTTESTLAUNCHROS = projectTestLaunchRos;
@@ -70,9 +78,9 @@ public class TestThread extends Thread implements Serializable {
     public void run() {
         if(task.equals("ROS")){
             testingProgress.setStateString("Testing ROS Environment");
-            String[] command = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " + "VERSE NON_SUDO"};
+            String[] command = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " +"REVERSE" +" NON_SUDO"};
             String[] directCommand = {"/bin/bash", "-c", "gksudo cp " + PROJECTPATH + "/src/sample/ROSFiles/tcpros_service.py "+ROSTCPROSPPATH + " && cp "+PROJECTPATH +"/src/sample/ROSFilesMod/node_handle.h "+ ROSNODEHANDLECPATH};
-            String[] command3 ={"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " + "VERSE NON_SUDO"};
+            String[] command3 ={"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " + "REVERSE" +" NON_SUDO"};
             System.out.print(Arrays.toString(command3));
             ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state
             ThreadHandler threadHandler1 = new ThreadHandler(directCommand, true, false);
@@ -84,8 +92,12 @@ public class TestThread extends Thread implements Serializable {
                 e.printStackTrace();
             }
 
+
+
             if (threadHandler.returnedData.equals("NON_MOD_ROS")) {
                 ROSPassed = true;
+
+
                 System.out.print("Success by NON_MOD_ROS");
             } else {
                 threadHandler1.start();

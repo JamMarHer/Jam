@@ -48,6 +48,7 @@ public class DatabaseOperations {
         return true;
     }
 
+    // Generates Settings database
     public void generateDatabase(){
         Connection c = null;
         Statement stmt = null;
@@ -59,7 +60,8 @@ public class DatabaseOperations {
             String sql = "CREATE TABLE settings " +
                     "(ID INT     NOT NULL,"+
                     "EXT_DIR         TEXT, " +
-                    "DAIKON_DIR         TEXT"+
+                    "DAIKON_DIR         TEXT, "+
+                    "ROS_DIR         TEXT"+
                     ")";
             stmt.executeUpdate(sql);
             stmt.close();
@@ -115,6 +117,11 @@ public class DatabaseOperations {
                 }
                 if (option.equals("extDaikon")) {
                     String sql = "INSERT INTO settings (ID, DAIKON_DIR) VALUES (2, '" + data + "' );";
+                    stmt.executeUpdate(sql);
+                    created = true;
+                }
+                if (option.equals("extROS")) {
+                    String sql = "INSERT INTO settings (ID, ROS_DIR) VALUES (3, '" + data + "' );";
                     stmt.executeUpdate(sql);
                     created = true;
                 }
@@ -219,6 +226,13 @@ public class DatabaseOperations {
                     System.out.print("updates Daikon");
                     updated = true;
                 }
+                if (option.equals("extROS")) {
+                    String sql = "UPDATE settings set ROS_DIR = '" + data + "' WHERE ID=3;";
+                    statement.executeUpdate(sql);
+                    c.commit();
+                    System.out.print("updates ROS location");
+                    updated = true;
+                }
                 statement.close();
                 c.close();
             } catch (Exception e) {
@@ -289,11 +303,16 @@ public class DatabaseOperations {
                     toReturn = rss.getString("DAIKON_DIR");
                     rss.close();
                 }
+                if (option.equals("extROS")) {
+                    ResultSet rss = stmt2.executeQuery("SELECT * FROM settings WHERE ID=3;");
+                    toReturn = rss.getString("ROS_DIR");
+                    rss.close();
+                }
 
                 stmt.close();
                 c.close();
             } catch (Exception e) {
-                System.err.println(e.getClass().getName() + ": retrieveData " + e.getMessage());
+                System.err.println(e.getClass().getName() + ": retrieveData by" +option+" -" + e.getMessage());
                 System.exit(0);
             }
         }

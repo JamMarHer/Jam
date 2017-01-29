@@ -32,6 +32,7 @@ public class Controller implements Initializable, Serializable {
     private boolean environmentSetup = false;
 
     @FXML private javafx.scene.control.MenuItem settings;
+    @FXML private MenuItem instrumentROS;
     @FXML private MenuItem close;
     @FXML private Line mainEnvironmentNotSetupLine = new Line();
     @FXML private Text mainEnvironmentNotSetupLabel = new Text();
@@ -39,6 +40,7 @@ public class Controller implements Initializable, Serializable {
     @FXML private MenuItem rosMonitor = new MenuItem();
     @FXML private MenuItem loadPreviousTest = new MenuItem();
     @FXML private MenuItem loadPreviousReport = new MenuItem();
+    @FXML private MenuItem undoInstrumentROS = new MenuItem();
     @FXML private BorderPane MainPane = new BorderPane();
     @FXML private TabPane MainTesting = new TabPane();
     @FXML private StackPane MainStackPane = new StackPane();
@@ -63,11 +65,14 @@ public class Controller implements Initializable, Serializable {
     private String[] RunableSupportCommand;
     private String testName;
     private int numberOfMonitors;
+    private String verse_reverse;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         numberOfMonitors = 0;
+        System.out.println("NOT HERE");
+        verse_reverse = "REVERSE";
         databaseOperations = new DatabaseOperations();
         TestsStatusTest.setText("...");
         try {
@@ -77,7 +82,6 @@ public class Controller implements Initializable, Serializable {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
 
         if(!(databaseOperations.retrieveData("extDir", null,"settings").equals("/...") || databaseOperations.retrieveData("extDaikon", null, "settings").equals("/..."))) {
             environmentSetup = true;
@@ -164,6 +168,51 @@ public class Controller implements Initializable, Serializable {
         });
 
         loadPreviousReport.setOnAction(event -> loadReport());
+        int toastMsgTime = 3500; //3.5 seconds
+        int fadeInTime = 500; //0.5 seconds
+        int fadeOutTime= 500; //0.5 seconds
+        instrumentROS.setOnAction(event -> {
+
+            String[] command = {"/bin/bash", "-c", "python " + System.getProperty("user.dir") + "/src/sample/PythonScripts/checkROSStatus.py " + System.getProperty("user.dir") + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/" + " REVERSE NON_SUDO"};
+            String[]  NonModToMod = {"/bin/bash", "-c", "gksudo cp " + System.getProperty("user.dir") + "/src/sample/ROSFilesMod/tcpros_service.py "+databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " && cp "+System.getProperty("user.dir") +"/src/sample/ROSFilesMod/node_handle.h "+ databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/"};
+            System.out.println(Arrays.toString(NonModToMod));
+            ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state
+            ThreadHandler threadHandler2 = new ThreadHandler(NonModToMod, true, false);
+
+            threadHandler2.run();
+            try {
+                threadHandler2.join();
+                threadHandler.run();
+                threadHandler.join();
+                System.out.println(threadHandler.returnedData);
+                if(threadHandler.returnedData.equals("MOD_ROS")){
+                    Toast.makeText((Stage) MainStackPane.getScene().getWindow(), "ROS Instrumented", toastMsgTime, fadeInTime, fadeOutTime);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        undoInstrumentROS.setOnAction(event -> {
+            String[] ModToNonMod = {"/bin/bash", "-c", "gksudo cp " + System.getProperty("user.dir") + "/src/sample/ROSFiles/tcpros_service.py "+databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " && cp "+System.getProperty("user.dir") +"/src/sample/ROSFiles/node_handle.h "+ databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/"};
+            String[] command = {"/bin/bash", "-c", "python " + System.getProperty("user.dir") + "/src/sample/PythonScripts/checkROSStatus.py " + System.getProperty("user.dir") + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/" + " VERSE NON_SUDO"};
+
+            ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state
+            ThreadHandler threadHandler1 = new ThreadHandler(ModToNonMod, true, false);
+
+            threadHandler1.run();
+            try {
+                threadHandler1.join();
+                threadHandler.run();
+                threadHandler.join();
+                System.out.println(threadHandler.returnedData);
+                if(threadHandler.returnedData.equals("NON_MOD_ROS")){
+                    Toast.makeText((Stage) MainStackPane.getScene().getWindow(), "ROS Instrumentation Removed", toastMsgTime, fadeInTime, fadeOutTime);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 

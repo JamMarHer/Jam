@@ -18,7 +18,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="MainPane"  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="800.0" minWidth="1400.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
+<BorderPane fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="800.0" minWidth="1400.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
 
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -43,6 +43,8 @@
                     <items>
                         <MenuItem fx:id="architecturalInvariantTest" mnemonicParsing="false" text="Architectural Invariant Test" />
                   <MenuItem fx:id="loadPreviousTest" mnemonicParsing="false" text="Load Previous Test" />
+                  <MenuItem fx:id="instrumentROS" mnemonicParsing="false" text="Instrument ROS" />
+                  <MenuItem fx:id="undoInstrumentROS" mnemonicParsing="false" text="Undo ROS Instrumentation " />
                     </items>
                 </Menu>
             <Menu mnemonicParsing="false" text="Reports">

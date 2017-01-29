@@ -28,6 +28,7 @@ public class Main extends Application {
             databaseOperations.generateDatabase();
             databaseOperations.insertData("extDir", "/...", "settings");
             databaseOperations.insertData("extDaikon", "/...", "settings");
+            databaseOperations.insertData("extROS", "/...", "settings");
             InitialSetup initialSetup = new InitialSetup();
 
             initialSetup.display();
