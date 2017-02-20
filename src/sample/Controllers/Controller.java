@@ -174,7 +174,7 @@ public class Controller implements Initializable, Serializable {
         instrumentROS.setOnAction(event -> {
 
             String[] command = {"/bin/bash", "-c", "python " + System.getProperty("user.dir") + "/src/sample/PythonScripts/checkROSStatus.py " + System.getProperty("user.dir") + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/" + " REVERSE NON_SUDO"};
-            String[]  NonModToMod = {"/bin/bash", "-c", "gksudo cp " + System.getProperty("user.dir") + "/src/sample/ROSFilesMod/tcpros_service.py "+databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " && cp "+System.getProperty("user.dir") +"/src/sample/ROSFilesMod/node_handle.h "+ databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/"};
+            String[]  NonModToMod = {"/bin/bash", "-c", "gksudo cp " + System.getProperty("user.dir") + "/src/sample/ROSFilesMod/tcpros_service.py "+databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " && gksudo cp "+System.getProperty("user.dir") +"/src/sample/ROSFilesMod/node_handle.h "+ databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/"};
             System.out.println(Arrays.toString(NonModToMod));
             ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state
             ThreadHandler threadHandler2 = new ThreadHandler(NonModToMod, true, false);
@@ -194,7 +194,7 @@ public class Controller implements Initializable, Serializable {
         });
 
         undoInstrumentROS.setOnAction(event -> {
-            String[] ModToNonMod = {"/bin/bash", "-c", "gksudo cp " + System.getProperty("user.dir") + "/src/sample/ROSFiles/tcpros_service.py "+databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " && cp "+System.getProperty("user.dir") +"/src/sample/ROSFiles/node_handle.h "+ databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/"};
+            String[] ModToNonMod = {"/bin/bash", "-c", "gksudo cp " + System.getProperty("user.dir") + "/src/sample/ROSFiles/tcpros_service.py "+databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " && gksudo cp "+System.getProperty("user.dir") +"/src/sample/ROSFiles/node_handle.h "+ databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/"};
             String[] command = {"/bin/bash", "-c", "python " + System.getProperty("user.dir") + "/src/sample/PythonScripts/checkROSStatus.py " + System.getProperty("user.dir") + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/lib/python2.7/dist-packages/rospy/impl/" + " " + databaseOperations.retrieveData("extROS", null,"settings")+"/include/ros/" + " VERSE NON_SUDO"};
 
             ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state

@@ -90,24 +90,24 @@ public class TestTabController implements Initializable {
         series.setName("Static");
         series.getData().add(new XYChart.Data<String,Number>("Publisher", AII.getSize("/rec/arch_pub", "Static")));
         series.getData().add(new XYChart.Data<String,Number>("Subscriber", AII.getSize("/rec/arch_sub", "Static")));
-        series.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Static")));
+        //series.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Static")));
         XYChart.Series series2 = new XYChart.Series();
         series2.setName("Variable");
         series2.getData().add(new XYChart.Data<String,Number>("Publisher", AII.getSize("/rec/arch_pub", "Variable")));
         series2.getData().add(new XYChart.Data<String,Number>("Subscriber", AII.getSize("/rec/arch_sub", "Variable")));
-        series2.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Variable")));
+        //series2.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Variable")));
         XYChart.Series series3 = new XYChart.Series();
         series3.setName("Restricted Variable");
         series3.getData().add(new XYChart.Data<String,Number>("Publisher", AII.getSize("/rec/arch_pub", "Restricted")));
         series3.getData().add(new XYChart.Data<String,Number>("Subscriber", AII.getSize("/rec/arch_sub", "Restricted")));
-        series3.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Restricted")));
+        //series3.getData().add(new XYChart.Data<String,Number>("Services", AII.getSize("/rec/arch_srvs", "Restricted")));
         BarChartII.getData().setAll(series,series2,series3);
         BarChartII.setVisible(true);
         BarChartII.impl_updatePeer();
 
         InputTotalPub.setText("/rec/arch_pub:   "+String.valueOf(AII.getSize("/rec/arch_pub", "Static")+AII.getSize("/rec/arch_pub", "Variable")+AII.getSize("/rec/arch_pub", "Restricted")));
         InputTotalSub.setText("/rec/arch_sub:   "+String.valueOf(AII.getSize("/rec/arch_sub", "Variable")+AII.getSize("/rec/arch_sub", "Static")+AII.getSize("/rec/arch_sub", "Restricted")));
-        InputTotalServ.setText("/rec/arch_srvs:  "+String.valueOf(AII.getSize("/rec/arch_srvs", "Static")+AII.getSize("/rec/arch_srvs", "Variable")+AII.getSize("/rec/arch_srvs", "Restricted")));
+        //InputTotalServ.setText("/rec/arch_srvs:  "+String.valueOf(AII.getSize("/rec/arch_srvs", "Static")+AII.getSize("/rec/arch_srvs", "Variable")+AII.getSize("/rec/arch_srvs", "Restricted")));
         InputTotal.setText("Total:                "+String.valueOf(AII.getSize()));
         TestingProgressIndicator.progressProperty().bind(testingProgress.stateProperty());
 

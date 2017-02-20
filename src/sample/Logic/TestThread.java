@@ -78,9 +78,9 @@ public class TestThread extends Thread implements Serializable {
     public void run() {
         if(task.equals("ROS")){
             testingProgress.setStateString("Testing ROS Environment");
-            String[] command = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " +"REVERSE" +" NON_SUDO"};
+            String[] command = {"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " +"VERSE" +" NON_SUDO"};
             String[] directCommand = {"/bin/bash", "-c", "gksudo cp " + PROJECTPATH + "/src/sample/ROSFiles/tcpros_service.py "+ROSTCPROSPPATH + " && cp "+PROJECTPATH +"/src/sample/ROSFilesMod/node_handle.h "+ ROSNODEHANDLECPATH};
-            String[] command3 ={"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " + "REVERSE" +" NON_SUDO"};
+            String[] command3 ={"/bin/bash", "-c", "python " + PROJECTPATH + "/src/sample/PythonScripts/checkROSStatus.py " + PROJECTPATH + " " + ROSTCPROSPPATH + " " + ROSNODEHANDLECPATH + " " + "VERSE" +" NON_SUDO"};
             System.out.print(Arrays.toString(command3));
             ThreadHandler threadHandler = new ThreadHandler(command,false, false); // Asks for ROS_MOD state
             ThreadHandler threadHandler1 = new ThreadHandler(directCommand, true, false);
@@ -277,7 +277,7 @@ public class TestThread extends Thread implements Serializable {
                                 String currentState = recordingNode+ "::::"+ state +":::"+ topic_serivce+"::"+
                                         min_max_minmax+":"+Arrays.toString(generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax).toArray());
                                 totalRequested++;
-                                String percentage = String.valueOf((totalRequested/totalToRequest) * 100).substring(0,4) + "%";
+                                String percentage = String.valueOf((totalRequested/totalToRequest) * 100) + "%";
                                 System.out.println(percentage);
                                 for(String node : generalMap.get(recordingNode).get(state).get(topic_serivce).get(min_max_minmax)){
                                     String[] command = {"/bin/bash", "-c", "source "+daikonExtension+"/catkin_ws/devel/setup.bash && rosservice call /deAttacher \"task: '"+pubsubser.get(recordingNode)+"'\n" +
